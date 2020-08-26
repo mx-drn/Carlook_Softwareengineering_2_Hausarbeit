@@ -10,6 +10,6 @@ public class Startseite implements View {
     }
 
     public void setUp () {
-
+        
     }
 }
