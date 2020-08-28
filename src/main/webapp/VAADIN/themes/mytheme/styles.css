@@ -1627,6 +1627,25 @@ div.v-layout.v-horizontal.v-widget {
 	vertical-align: top;
 }
 
+.grunddesign {
+	font-family: Calibri, sans-serif;
+	color: #000000;
+	padding: 10px;
+	font-size: 36px;
+	font-weight: bold;
+}
+
+.topPanel {
+	padding: 20px;
+	border-color: #03a9f4;
+}
+
+.login {
+	padding: 30px;
+	border-color: #9D874D;
+	background-color: #3c3c3c;
+}
+
 .mytheme.v-app, .mytheme.v-app-loading {
 	font: 300 16px/1.55 "Open Sans", sans-serif;
 	color: #464646;

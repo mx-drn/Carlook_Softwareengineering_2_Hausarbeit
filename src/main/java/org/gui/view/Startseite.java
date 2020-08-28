@@ -6,6 +6,7 @@ import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.*;
 import org.gui.components.Footer;
 import org.gui.components.TopPanel;
+import org.services.util.StylesheetUtil;
 
 public class Startseite extends VerticalLayout implements View {
     private Label whitespace = new Label("&nbsp", ContentMode.HTML);
@@ -15,6 +16,8 @@ public class Startseite extends VerticalLayout implements View {
     }
 
     public void setUp () {
+        this.setStyleName(StylesheetUtil.grunddesign);
+
         HorizontalLayout horiMain = new HorizontalLayout();
 
         VerticalLayout verticalMid = new VerticalLayout();
@@ -57,7 +60,8 @@ public class Startseite extends VerticalLayout implements View {
         verticalMidRight.addComponent(registrieren);
 
         //Layouts zusammenfügen
-
+        verticalMid.setStyleName(StylesheetUtil.login);
+        verticalMidRight.setStyleName(StylesheetUtil.login);
         horiMain.addComponent(verticalMid);
         horiMain.addComponent(verticalMidRight);
 

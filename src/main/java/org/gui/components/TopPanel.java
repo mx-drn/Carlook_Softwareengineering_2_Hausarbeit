@@ -7,6 +7,7 @@ import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.*;
 import org.model.entity.Benutzer;
 import org.services.util.Rolle;
+import org.services.util.StylesheetUtil;
 import org.services.util.ViewUtil;
 import org.ui.MainUI;
 
@@ -17,7 +18,7 @@ public class TopPanel extends HorizontalLayout {
         Benutzer benutzer = ((MainUI) UI.getCurrent()).getBenutzer();
 
         this.setMargin(true);
-        //this.addStyleName(StylesheetUtil.BLA);
+        this.addStyleName(StylesheetUtil.toppanel);
         this.setWidth("100%");
 
 
