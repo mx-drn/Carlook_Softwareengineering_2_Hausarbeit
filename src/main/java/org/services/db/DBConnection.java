@@ -7,7 +7,7 @@ public class DBConnection {
     private Connection connection = null;
 
     // Connectionstring zur PostgreSQL Datenbank
-    private static final String url = "jdbc:postgresql://dumbo.inf.h-brs.de:5432/ealbus2s";
+    private static final String url = "jdbc:postgresql://dumbo.inf.h-brs.de:5432/mduere2s";
 
     // Benutzer der Datenbank
     private static final String user = "mduere2s";
@@ -54,6 +54,10 @@ public class DBConnection {
             s = this.connection.prepareStatement(sql);
         }
         return s;
+    }
+
+    public PreparedStatement getPreparedStatement(String sql) throws SQLException {
+        return this.connection.prepareStatement(sql);
     }
     /**
      * Stellt das automatische Commiten der lokalen java.sql.Connection ab.
