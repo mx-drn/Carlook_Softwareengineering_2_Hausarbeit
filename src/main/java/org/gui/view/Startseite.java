@@ -4,9 +4,14 @@ import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.*;
+import org.control.LoginControl;
+import org.control.exception.NoSuchUserOrPasswordException;
 import org.gui.components.Footer;
 import org.gui.components.TopPanel;
 import org.services.util.StylesheetUtil;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Startseite extends VerticalLayout implements View {
     private Label whitespace = new Label("&nbsp", ContentMode.HTML);
@@ -35,6 +40,22 @@ public class Startseite extends VerticalLayout implements View {
         horizontalLayoutLogin.addComponent(passwort);
 
         Button anmelden = new Button("Anmelden");
+        anmelden.addClickListener(new Button.ClickListener() {
+            @Override
+            public void buttonClick(Button.ClickEvent clickEvent) {
+
+
+                try {
+                    LoginControl.benutzerLogin(email.getValue(), passwort.getValue());
+                } catch (NoSuchUserOrPasswordException e) {
+                    //Fehler beim Authentifizieren
+                    Notification.show("Login nicht möglich. Bitte überprüfen Sie Ihre Eingaben!", Notification.Type.ERROR_MESSAGE);
+                    email.setValue("");
+                    passwort.setValue("");
+                }
+
+            }
+        });
         horizontalLayoutLogin.addComponent(anmelden);
 
         verticalMid.addComponent(horizontalLayoutLogin);

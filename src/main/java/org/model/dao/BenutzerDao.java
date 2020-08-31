@@ -35,15 +35,16 @@ public class BenutzerDao {
     }
 
     public Benutzer getBenutzer(String email, String passwort) throws DataBaseException, NoSuchUserOrPasswordException {
-        String sql = "SELECT * FROM carlook.benutzer AS b WHERE b.email=? AND b.passwort=?";
+        String sql = "SELECT * FROM carlook.benutzer AS b WHERE b.email= '" + email + "' AND b.passwort= '" + passwort + "'";
         PreparedStatement preparedStatement = null;
         Benutzer benutzer = null;
         boolean failed = false;
 
         try {
+            if (this.dbConnection.connectionIsClosed()) this.dbConnection.openConnection();
             preparedStatement = this.dbConnection.getPreparedStatement(sql);
-            preparedStatement.setString(1, email);
-            preparedStatement.setString(2, passwort);
+            //preparedStatement.setString(1, email);
+            //preparedStatement.setString(2, passwort);
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {

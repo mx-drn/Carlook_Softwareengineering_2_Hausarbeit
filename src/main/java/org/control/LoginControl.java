@@ -19,36 +19,19 @@ import static org.services.util.FieldControl.checkEmptyFields;
 
 public class LoginControl {
 
-    public static void benutzerLogin (Map<String, AbstractField> userData){
+    public static void benutzerLogin (String email, String passwort) throws NoSuchUserOrPasswordException {
         try {
-            checkEmptyFields(userData);
-            TextField usernameTextField = (TextField) userData.get("Benutzername");
-            TextField passwordTextField = (TextField) userData.get("Passwort");
-            try {
-                //LoginControl.navigate(
-                LoginControl.checkAuthentication(usernameTextField.getValue(),
-                        passwordTextField.getValue());
+            //LoginControl.navigate(
+            LoginControl.checkAuthentication(email, passwort);
 
-                if(((CheckBox)userData.get("cbxBenutzerErinnern")).getValue())
-                {
-                    JavascriptUtil.setCookieUser(usernameTextField.getValue());
-                }
-                Notification.show("Login erfolgreich", Notification.Type.HUMANIZED_MESSAGE);
-            }
-            //Datenbankfehler
-            catch (DataBaseException ex) {
-                Notification.show(ex.getReason(), Notification.Type.ERROR_MESSAGE);
-            }
-            //Fehler beim Authentifizieren
-            catch (NoSuchUserOrPasswordException ex) {
-                Notification.show("Login nicht möglich. Bitte überprüfen Sie Ihre Eingaben!", Notification.Type.ERROR_MESSAGE);
-                usernameTextField.setValue("");
-                passwordTextField.setValue("");
-            }
-
-        } catch (RegistrierungException ex) {
-            Notification.show(ex.getMessage(), Notification.Type.ERROR_MESSAGE);
+            Notification.show("Login erfolgreich", Notification.Type.HUMANIZED_MESSAGE);
         }
+        //Datenbankfehler
+        catch (DataBaseException ex) {
+            Notification.show(ex.getReason(), Notification.Type.ERROR_MESSAGE);
+        }
+
+
     }
 
     public static void checkAuthentication(String email, String passwort) throws NoSuchUserOrPasswordException, DataBaseException {

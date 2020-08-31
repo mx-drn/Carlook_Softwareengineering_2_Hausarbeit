@@ -13,7 +13,7 @@ public class DBConnection {
     private static final String user = "mduere2s";
 
     // Passwort des Benutzers
-    private static final String password =  DBpwd.PASSWORT;
+    private static final String password = DBpwd.PASSWORT;
 
     public DBConnection() throws SQLException {
         openConnection();
