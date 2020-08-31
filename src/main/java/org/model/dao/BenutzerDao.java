@@ -4,11 +4,15 @@ import org.atmosphere.interceptor.AtmosphereResourceStateRecovery;
 import org.control.exception.DataBaseException;
 import org.control.exception.NoSuchUserOrPasswordException;
 import org.model.entity.Benutzer;
+import org.model.entity.Endnutzer;
+import org.model.entity.Vertriebler;
 import org.services.db.DBConnection;
+import org.services.util.Rolle;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class BenutzerDao {
     private static BenutzerDao instance;
@@ -78,11 +82,203 @@ public class BenutzerDao {
         return benutzer;
     }
 
-    private Benutzer getVertriebler(Benutzer benutzer) {
+    public void saveUser(Benutzer benutzer) throws DataBaseException {
+        String sql = "INSERT INTO carlook.benutzer (rolle, email, passwort) VALUES (?,?,?)";
+        PreparedStatement preparedStatement = null;
+        boolean failed = false;
+        try {
+            preparedStatement = this.dbConnection.getPreparedStatement(sql);
 
+            // Benutzer speichern
+            preparedStatement.setString(1, benutzer.getRolle());
+            preparedStatement.setString(2, benutzer.getEmail());
+            preparedStatement.setString(3, benutzer.getPasswort());
+            preparedStatement.executeUpdate();
+
+            // Vergebene Benutzerid ermitteln
+            this.setLatestUserId(benutzer);
+
+            // Student o. Unternehmen speichern
+
+            if(benutzer.getRolle().equals(Rolle.ENDNUTZER)) this.saveEndnutzer((Endnutzer) benutzer);
+            else if (benutzer.getRolle().equals(Rolle.VERTRIEBLER))this.saveVertriebler((Vertriebler) benutzer);
+
+            this.dbConnection.commit();
+        }
+        // Fehlerhandling
+        catch (SQLException | DataBaseException e) {
+            e.printStackTrace();
+            failed = true;
+        }
+
+        // Ressourcen schließen
+        finally {
+            try {
+                if(preparedStatement != null) preparedStatement.close();
+                this.dbConnection.closeConnection();
+            }
+            catch(SQLException e) {
+                e.printStackTrace();
+                failed = true;
+            }
+            // Wenn ein Fehler aufgetreten ist
+            if (failed) throw new DataBaseException("Beim Speichern des Benutzers ist ein Fehler aufgetreten!");
+        }
     }
 
-    private Benutzer getEndnutzer(Benutzer benutzer) {
+    //Private Methoden
 
+    private void saveVertriebler(Vertriebler vertriebler) throws DataBaseException {
+        String sql = "INSERT INTO carlook.vertriebler (id_vertriebler) VALUES (?)";
+        PreparedStatement preparedStatement = null;
+        boolean failed = false;
+        try {
+            preparedStatement = this.dbConnection.getPreparedStatement(sql);
+            preparedStatement.setInt(1, vertriebler.getId());
+            preparedStatement.executeUpdate();
+        }
+        catch(SQLException e) {
+            e.printStackTrace();
+            failed = true;
+        }
+        finally {
+            try {
+                if (preparedStatement != null) preparedStatement.close();
+            }
+            catch (SQLException e) {
+                e.printStackTrace();
+                failed = true;
+            }
+            if (failed) throw new DataBaseException("");
+        }
+    }
+
+    private void saveEndnutzer(Endnutzer endnutzer) throws DataBaseException {
+        String sql = "INSERT INTO carlook.endnutzer (id_endnutzer) VALUES (?)";
+        PreparedStatement preparedStatement = null;
+        boolean failed = false;
+        try {
+            preparedStatement = this.dbConnection.getPreparedStatement(sql);
+            preparedStatement.setInt(1, endnutzer.getId());
+            preparedStatement.executeUpdate();
+        }
+        catch(SQLException e) {
+            e.printStackTrace();
+            failed = true;
+        }
+        finally {
+            try {
+                if (preparedStatement != null) preparedStatement.close();
+            }
+            catch (SQLException e) {
+                e.printStackTrace();
+                failed = true;
+            }
+            if (failed) throw new DataBaseException("");
+        }
+    }
+
+    private Benutzer getVertriebler(Benutzer benutzer) throws DataBaseException, NoSuchUserOrPasswordException  {
+        Statement statement = null;
+        boolean failed = false;
+        Vertriebler vertriebler = null;
+
+        try{
+            statement = this.dbConnection.getStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM carlook.vertriebler AS v WHERE v.id_vertriebler='" + benutzer.getId() + "'");
+
+            if(resultSet.next()) {
+                vertriebler = new Vertriebler();
+                vertriebler.setRolle(benutzer.getRolle());
+                vertriebler.setEmail(benutzer.getEmail());
+                vertriebler.setPasswort(benutzer.getPasswort());
+                vertriebler.setId(benutzer.getId());
+            }
+            //Kein Vertriebler mit der BenutzerID gefunden
+            else throw new NoSuchUserOrPasswordException();
+
+        }catch (SQLException ex){
+
+        }finally{
+            try {
+                if(statement != null) statement.close();
+            }
+            catch (SQLException e) {
+                e.printStackTrace();
+                failed = true;
+            }
+            if(failed) throw new DataBaseException("");
+        }
+
+        return vertriebler;
+    }
+
+    private Benutzer getEndnutzer(Benutzer benutzer) throws DataBaseException, NoSuchUserOrPasswordException {
+        Statement statement = null;
+        boolean failed = false;
+        Endnutzer endnutzer = null;
+
+        try{
+            statement = this.dbConnection.getStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM carlook.vertriebler AS v WHERE v.id_vertriebler='" + benutzer.getId() + "'");
+
+            if(resultSet.next()) {
+                endnutzer = new Endnutzer();
+                endnutzer.setRolle(benutzer.getRolle());
+                endnutzer.setEmail(benutzer.getEmail());
+                endnutzer.setPasswort(benutzer.getPasswort());
+                endnutzer.setId(benutzer.getId());
+            }
+            //Kein Vertriebler mit der BenutzerID gefunden
+            else throw new NoSuchUserOrPasswordException();
+
+        }catch (SQLException ex){
+
+        }finally{
+            try {
+                if(statement != null) statement.close();
+            }
+            catch (SQLException e) {
+                e.printStackTrace();
+                failed = true;
+            }
+            if(failed) throw new DataBaseException("");
+        }
+
+        return endnutzer;
+    }
+
+    private void setLatestUserId(Benutzer benutzer) throws DataBaseException {
+        Statement statement = null;
+        boolean failed = false;
+        try {
+            statement = this.dbConnection.getStatement();
+            // Vergebene Benutzerid ermitteln
+            ResultSet result = statement.executeQuery("SELECT MAX(b.benutzerid) FROM production.benutzer as b");
+            result.next();
+            benutzer.setId(result.getInt(1));
+        }
+        catch(SQLException e) {
+            e.printStackTrace();
+            failed = true;
+        }
+        finally {
+            try {
+                if(statement != null) statement.close();
+            }
+            catch(SQLException e) {
+                e.printStackTrace();
+                failed = true;
+            }
+            if (failed) throw new DataBaseException("");
+        }
+    }
+
+    public void closeConnection() {
+        try {
+            this.dbConnection.closeConnection();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 }

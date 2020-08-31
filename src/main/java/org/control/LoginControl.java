@@ -4,7 +4,12 @@ import com.vaadin.ui.*;
 import org.control.exception.DataBaseException;
 import org.control.exception.NoSuchUserOrPasswordException;
 import org.control.exception.RegistrierungException;
+import org.model.dao.BenutzerDao;
+import org.model.dao.DaoFactory;
 import org.model.entity.Benutzer;
+import org.services.util.JavascriptUtil;
+import org.services.util.Rolle;
+import org.services.util.ViewUtil;
 import org.ui.MainUI;
 
 import java.util.ArrayList;
@@ -46,30 +51,20 @@ public class LoginControl {
         }
     }
 
-    public static void checkAuthentication(String username, String password) throws NoSuchUserOrPasswordException, DataBaseException {
+    public static void checkAuthentication(String email, String passwort) throws NoSuchUserOrPasswordException, DataBaseException {
 
-        GenericDao<Benutzer> benutzerDao = DaoFactory.getInstance().getBenutzerDao(false, false);
-        String[] columns = { "benutzername", "passwort" };
-        String[] values = { username, password };
-        ArrayList<Benutzer> benutzerList = benutzerDao.getByAttributs(columns, values, false);
+        BenutzerDao benutzerDao = DaoFactory.getInstance().getBenutzerDao();
+        Benutzer benutzer = benutzerDao.getBenutzer(email, passwort);
         // Benutzer gefunden
-        if(benutzerList != null && benutzerList.size() > 0) {
-            Benutzer benutzer = benutzerList.get(0);
+        if(benutzer != null) {
             // Benutzer ist Student
-            if(benutzer.getRolle().equals(Rolle.STUDENT)) {
-                benutzer = DaoFactory.getInstance().getStudentenDao(benutzerDao, true).getById(benutzer.getBenutzerid());
+            if(benutzer.getRolle().equals(Rolle.ENDNUTZER)) {
                 ((MainUI) UI.getCurrent()).setBenutzer(benutzer);
-                UI.getCurrent().getNavigator().navigateTo(ViewUtil.MAIN_STUDENT);
+                UI.getCurrent().getNavigator().navigateTo(ViewUtil.VIEWENDNNUTZER);
             }
-            else if(benutzer.getRolle().equals(Rolle.UNTERNEHMEN)) {
-                benutzer = DaoFactory.getInstance().getUnternehmensDao(benutzerDao, true).getById(benutzer.getBenutzerid());
+            else if(benutzer.getRolle().equals(Rolle.VERTRIEBLER)) {
                 ((MainUI) UI.getCurrent()).setBenutzer(benutzer);
-                UI.getCurrent().getNavigator().navigateTo(ViewUtil.MAIN_UNTERNEHMEN);
-            }
-            else if(benutzer.getRolle().equals(Rolle.ADMIN)) {
-                benutzerDao.closeConnection();
-                ((MainUI) UI.getCurrent()).setBenutzer(benutzer);
-                UI.getCurrent().getNavigator().navigateTo(ViewUtil.ADMIN);
+                UI.getCurrent().getNavigator().navigateTo(ViewUtil.VIEWVERTRIEBLER);
             }
         }
         else {
