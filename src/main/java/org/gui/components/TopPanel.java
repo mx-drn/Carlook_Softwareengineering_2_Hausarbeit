@@ -26,7 +26,7 @@ public class TopPanel extends HorizontalLayout {
         HorizontalLayout menuBarHorLayout = new HorizontalLayout();
 
         //Logo und Titel einbinden
-        ThemeResource resource = new ThemeResource("img/HBRS_logo.jpg");
+        ThemeResource resource = new ThemeResource("img/carlook_logo.jpg");
         Image logo = new Image(null, resource);
         logo.setWidth("150px");
         logo.addClickListener(new MouseEvents.ClickListener() {
@@ -40,29 +40,29 @@ public class TopPanel extends HorizontalLayout {
             }
         });
 
-        Label carlook = new Label("Carlook", ContentMode.HTML);
-        carlook.addStyleName("carlook");
-
         mainHorLayout.addComponent(logo);
-        mainHorLayout.addComponent(carlook);mainHorLayout.setComponentAlignment(logo, Alignment.MIDDLE_LEFT);
-        mainHorLayout.setComponentAlignment(carlook, Alignment.MIDDLE_LEFT);
+        mainHorLayout.setComponentAlignment(logo, Alignment.MIDDLE_LEFT);
         this.addComponent(mainHorLayout);
 
         // Menubar erzeugen
-        MenuBar menuBar = new MenuBar();
 
-        MenuBar.MenuItem logout = menuBar.addItem("Logout", FontAwesome.SIGN_OUT, new MenuBar.Command() {
-            @Override
-            public void menuSelected(MenuBar.MenuItem menuItem) {
-                // Navigation zu MainView
-                UI.getCurrent().close();
-                UI.getCurrent().getNavigator().navigateTo(ViewUtil.MAIN);
-                UI.getCurrent().getPage().reload();
-            }
-        });
+        if(benutzer != null) {
 
-        addComponent(menuBarHorLayout);
-        setComponentAlignment(menuBarHorLayout, Alignment.MIDDLE_RIGHT);
+            MenuBar menuBar = new MenuBar();
+
+            MenuBar.MenuItem logout = menuBar.addItem("Logout", FontAwesome.SIGN_OUT, new MenuBar.Command() {
+                @Override
+                public void menuSelected(MenuBar.MenuItem menuItem) {
+                    // Navigation zu MainView
+                    UI.getCurrent().close();
+                    UI.getCurrent().getNavigator().navigateTo(ViewUtil.MAIN);
+                    UI.getCurrent().getPage().reload();
+                }
+            });
+
+            addComponent(menuBarHorLayout);
+            setComponentAlignment(menuBarHorLayout, Alignment.MIDDLE_RIGHT);
+        }
     }
 
 }

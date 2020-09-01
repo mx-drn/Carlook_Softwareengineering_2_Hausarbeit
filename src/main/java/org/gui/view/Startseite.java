@@ -7,6 +7,7 @@ import com.vaadin.ui.*;
 import org.control.LoginControl;
 import org.control.exception.NoSuchUserOrPasswordException;
 import org.gui.components.Footer;
+import org.gui.components.SchriftzugCarlook;
 import org.gui.components.TopPanel;
 import org.services.util.StylesheetUtil;
 
@@ -21,9 +22,12 @@ public class Startseite extends VerticalLayout implements View {
     }
 
     public void setUp () {
-        this.setStyleName(StylesheetUtil.grunddesign);
+        //Erstellen des Hintergrundes
+        StylesheetUtil.loadBackground(this, "startseite_bg");
 
+        //Erstellen Grunddesign
         HorizontalLayout horiMain = new HorizontalLayout();
+        horiMain.setStyleName(StylesheetUtil.grunddesign);
 
         VerticalLayout verticalMid = new VerticalLayout();
         verticalMid.setWidth("62%"); //circa Goldener Schnitt

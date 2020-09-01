@@ -1632,6 +1632,13 @@ div.v-layout.v-horizontal.v-widget {
 	color: #000000;
 	padding: 10px;
 	font-size: 14px;
+	font-weight: normal;
+}
+
+.schriftzug_carlook {
+	font-family: Calibri, "Harlow Solid Italic";
+	color: #000000;
+	font-size: 20px;
 	font-weight: bold;
 }
 

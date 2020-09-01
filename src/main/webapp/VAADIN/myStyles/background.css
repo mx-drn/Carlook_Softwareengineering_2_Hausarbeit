@@ -1,0 +1,12 @@
+#intro {
+    height: 100%;
+    overflow:scroll;
+
+}
+#intro {
+    background: url("./Background_Startseite.png")no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
