@@ -11,6 +11,7 @@ public class StylesheetUtil {
     public static final String grunddesign = "grunddesign";
     public static final String STYLE_BACKGROUND_RED = "error-field ";
     public static final String schriftzug = "schriftzug_carlook";
+    public static final String tabsheet = "tabsheet";
 
     public static void loadBackground(Layout layout, String name) {
         layout.addComponent(new Label("<link rel=\"stylesheet\" href=\"./VAADIN/myStyles/background.css\">",

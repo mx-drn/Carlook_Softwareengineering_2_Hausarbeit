@@ -33,17 +33,25 @@ public class Startseite extends VerticalLayout implements View {
         setComponentAlignment(schriftzugCarlook, Alignment.TOP_CENTER);
         schriftzugCarlook.setStyleName(StylesheetUtil.schriftzug);
 
+        addComponent(whitespace.getWhitespace());
+/*
         //Erstellen Grunddesign
         HorizontalLayout horiMain = new HorizontalLayout();
         horiMain.setStyleName(StylesheetUtil.grunddesign);
 
-        VerticalLayout verticalMid = new VerticalLayout();
-        verticalMid.setWidth("62%"); //circa Goldener Schnitt
+*/
+
+        //Tabsheet für das wechseln zwischen Login und Registrierung
+
+        TabSheet tabSheet = new TabSheet();
+        addComponent(tabSheet);
+        VerticalLayout tabLinks = new VerticalLayout();
+        VerticalLayout tabRechts = new VerticalLayout();
 
         //E-Mail Adresse für den Login
         TextField email = new TextField("E-Mail");
         email.setDescription("Ihre E-Mail Adresse");
-        verticalMid.addComponent(email);
+
 
         //Passwort
         HorizontalLayout horizontalLayoutLogin = new HorizontalLayout();
@@ -70,12 +78,9 @@ public class Startseite extends VerticalLayout implements View {
         });
         horizontalLayoutLogin.addComponent(anmelden);
 
-        verticalMid.addComponent(horizontalLayoutLogin);
-        verticalMid.setMargin(true);
-
-        //Registrieren feld
-        VerticalLayout verticalMidRight = new VerticalLayout();
-        verticalMidRight.setWidth("62%");
+        tabLinks.addComponent(email);
+        tabLinks.addComponent(horizontalLayoutLogin);
+        tabLinks.setMargin(true);
 
         Label registriertfrage = new Label("Noch nicht registriert?");
 
@@ -88,19 +93,16 @@ public class Startseite extends VerticalLayout implements View {
             }
         });
 
-        verticalMidRight.addComponent(registriertfrage);
-        verticalMidRight.addComponent(whitespace.getWhitespace());
-        verticalMidRight.addComponent(registrieren);
-        verticalMidRight.addComponent(whitespace.getWhitespace());
+        tabRechts.addComponent(registriertfrage);
+        tabRechts.addComponent(registrieren);
+        tabLinks.setStyleName(StylesheetUtil.tabsheet);
+        tabRechts.setStyleName(StylesheetUtil.tabsheet);
 
-        //Layouts zusammenfügen
-        verticalMid.setStyleName(StylesheetUtil.login);
-        verticalMidRight.setStyleName(StylesheetUtil.login);
-        horiMain.addComponent(verticalMid);
-        horiMain.addComponent(verticalMidRight);
+        tabSheet.addTab(tabLinks, "Login");
+        tabSheet.addTab(tabRechts, "Registrieren");
+        setComponentAlignment(tabSheet, Alignment.MIDDLE_CENTER);
 
-        addComponent(horiMain);
-        setComponentAlignment(horiMain, Alignment.MIDDLE_CENTER);
+
         addComponent(whitespace.getWhitespace());
         addComponent(whitespace.getWhitespace());
 
