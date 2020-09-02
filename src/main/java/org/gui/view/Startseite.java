@@ -10,12 +10,13 @@ import org.gui.components.Footer;
 import org.gui.components.SchriftzugCarlook;
 import org.gui.components.TopPanel;
 import org.services.util.StylesheetUtil;
+import org.services.util.Whitespace;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class Startseite extends VerticalLayout implements View {
-    private Label whitespace = new Label("&nbsp", ContentMode.HTML);
+    Whitespace whitespace = new Whitespace();
 
     public void enter (ViewChangeListener.ViewChangeEvent viewChangeEvent) {
         this.setUp();
@@ -23,7 +24,14 @@ public class Startseite extends VerticalLayout implements View {
 
     public void setUp () {
         //Erstellen des Hintergrundes
-        StylesheetUtil.loadBackground(this, "startseite_bg");
+        //StylesheetUtil.loadBackground(this, "startseite_bg");
+        setStyleName("bg");
+        setSizeFull();
+
+        SchriftzugCarlook schriftzugCarlook = new SchriftzugCarlook();
+        addComponent(schriftzugCarlook);
+        setComponentAlignment(schriftzugCarlook, Alignment.TOP_CENTER);
+        schriftzugCarlook.setStyleName(StylesheetUtil.schriftzug);
 
         //Erstellen Grunddesign
         HorizontalLayout horiMain = new HorizontalLayout();
@@ -67,6 +75,7 @@ public class Startseite extends VerticalLayout implements View {
 
         //Registrieren feld
         VerticalLayout verticalMidRight = new VerticalLayout();
+        verticalMidRight.setWidth("62%");
 
         Label registriertfrage = new Label("Noch nicht registriert?");
 
@@ -80,9 +89,9 @@ public class Startseite extends VerticalLayout implements View {
         });
 
         verticalMidRight.addComponent(registriertfrage);
-        verticalMidRight.addComponent(whitespace);
-        verticalMidRight.addComponent(whitespace);
+        verticalMidRight.addComponent(whitespace.getWhitespace());
         verticalMidRight.addComponent(registrieren);
+        verticalMidRight.addComponent(whitespace.getWhitespace());
 
         //Layouts zusammenfügen
         verticalMid.setStyleName(StylesheetUtil.login);
@@ -92,6 +101,8 @@ public class Startseite extends VerticalLayout implements View {
 
         addComponent(horiMain);
         setComponentAlignment(horiMain, Alignment.MIDDLE_CENTER);
+        addComponent(whitespace.getWhitespace());
+        addComponent(whitespace.getWhitespace());
 
         Footer footer = new Footer();
         addComponent(footer);
