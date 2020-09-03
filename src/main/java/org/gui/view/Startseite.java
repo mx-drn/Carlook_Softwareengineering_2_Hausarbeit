@@ -5,6 +5,7 @@ import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.*;
 import org.control.LoginControl;
+import org.control.exception.NoCarlookEmailAdresseException;
 import org.control.exception.NoSuchUserOrPasswordException;
 import org.gui.components.Footer;
 import org.gui.components.SchriftzugCarlook;
@@ -34,15 +35,8 @@ public class Startseite extends VerticalLayout implements View {
         schriftzugCarlook.setStyleName(StylesheetUtil.schriftzug);
 
         addComponent(whitespace.getWhitespace());
-/*
-        //Erstellen Grunddesign
-        HorizontalLayout horiMain = new HorizontalLayout();
-        horiMain.setStyleName(StylesheetUtil.grunddesign);
-
-*/
 
         //Tabsheet für das wechseln zwischen Login und Registrierung
-
         TabSheet tabSheet = new TabSheet();
         addComponent(tabSheet);
         VerticalLayout tabLinks = new VerticalLayout();
@@ -52,18 +46,14 @@ public class Startseite extends VerticalLayout implements View {
         TextField email = new TextField("E-Mail");
         email.setDescription("Ihre E-Mail Adresse");
 
-
         //Passwort
-        HorizontalLayout horizontalLayoutLogin = new HorizontalLayout();
         TextField passwort = new TextField("Passwort");
         passwort.setDescription("Ihr Passwort");
-        horizontalLayoutLogin.addComponent(passwort);
 
         Button anmelden = new Button("Anmelden");
         anmelden.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent clickEvent) {
-
 
                 try {
                     LoginControl.benutzerLogin(email.getValue(), passwort.getValue());
@@ -76,24 +66,49 @@ public class Startseite extends VerticalLayout implements View {
 
             }
         });
-        horizontalLayoutLogin.addComponent(anmelden);
 
         tabLinks.addComponent(email);
-        tabLinks.addComponent(horizontalLayoutLogin);
+        tabLinks.addComponent(passwort);
+        tabLinks.addComponent(anmelden);
         tabLinks.setMargin(true);
 
-        Label registriertfrage = new Label("Noch nicht registriert?");
+/*        //Name Vorname für die Registrierung
+        TextField vorname = new TextField("Vorname");
+        vorname.setDescription("Ihr Vorname");
+
+        TextField nachname = new TextField("Nachname");
+        nachname.setDescription("Ihr Nachname");
+
+        HorizontalLayout horizontalLayoutName = new HorizontalLayout();
+        horizontalLayoutName.addComponent(vorname);
+        horizontalLayoutName.addComponent(nachname);
+*/
+        //E-Mail Adresse für das Registrieren
+        TextField emailReg = new TextField("E-Mail");
+        email.setDescription("Ihre E-Mail Adresse");
+
+        //Passwort
+        TextField passwortReg = new TextField("Passwort");
+        passwort.setDescription("Ihr Passwort");
 
         Button registrieren = new Button("Registrieren");
 
         registrieren.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent clickEvent) {
-                    //Verlinkung auf registrierungsseite navigateTo()
-            }
+/*                try {
+                    //DB anbindung
+                } catch (NoCarlookEmailAdresseException e) {
+                    //Fehler beim Authentifizieren
+                    Notification.show("Ihre Email ist keine korrekte \"@carlook.de\" - Adresse!", Notification.Type.ERROR_MESSAGE);
+                    emailReg.setValue("");
+                }
+*/            }
         });
 
-        tabRechts.addComponent(registriertfrage);
+        //tabRechts.addComponent(horizontalLayoutName);
+        tabRechts.addComponent(emailReg);
+        tabRechts.addComponent(passwortReg);
         tabRechts.addComponent(registrieren);
         tabLinks.setStyleName(StylesheetUtil.tabsheet);
         tabRechts.setStyleName(StylesheetUtil.tabsheet);
@@ -101,6 +116,7 @@ public class Startseite extends VerticalLayout implements View {
         tabSheet.addTab(tabLinks, "Login");
         tabSheet.addTab(tabRechts, "Registrieren");
         setComponentAlignment(tabSheet, Alignment.MIDDLE_CENTER);
+        tabSheet.setWidth("25%");
 
 
         addComponent(whitespace.getWhitespace());

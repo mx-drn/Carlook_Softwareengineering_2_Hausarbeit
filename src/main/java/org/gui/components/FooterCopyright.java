@@ -7,6 +7,7 @@ public class FooterCopyright extends HorizontalLayout {
 
     public FooterCopyright () {
         this.addComponent(copyright);
+        copyright.setWidth("250%");
     }
 
 }

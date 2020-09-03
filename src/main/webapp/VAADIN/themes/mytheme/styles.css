@@ -1636,19 +1636,21 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .bg {
-	background-image: url("./img/Background_Startseite.png") !important;
-	color: #afafaf;
+	background-image: url("./img/Background_Startseite.jpg") !important;
+	background-size: cover;
+	color: #000000;
+	font-size: 15px;
 }
 
 .schriftzug_carlook {
 	font-family: Calibri, "Harlow Solid Italic";
-	color: #afafaf;
+	color: #000000;
 	font-size: 80px;
 	font-weight: bold;
 }
 
 .tabsheet {
-	color: #f0f0f0;
+	color: #000000;
 }
 
 .topPanel {
@@ -1660,6 +1662,11 @@ div.v-layout.v-horizontal.v-widget {
 	padding: 30px;
 	border-color: #9D874D;
 	background-color: #3c3c3c;
+}
+
+.footer {
+	font-color: #000000;
+	font-weight: bold;
 }
 
 .mytheme.v-app, .mytheme.v-app-loading {

@@ -2,6 +2,7 @@ package org.gui.components;
 
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.VerticalLayout;
+import org.services.util.StylesheetUtil;
 
 public class Footer extends VerticalLayout {
 
@@ -12,6 +13,7 @@ public class Footer extends VerticalLayout {
 
         FooterCopyright footerCopyright = new FooterCopyright();
         this.addComponent(footerCopyright);
+        footerCopyright.setStyleName(StylesheetUtil.footer);
         this.setComponentAlignment(footerCopyright, Alignment.MIDDLE_CENTER);
     }
 
