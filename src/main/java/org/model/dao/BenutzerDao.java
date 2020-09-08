@@ -41,7 +41,7 @@ public class BenutzerDao {
         boolean failed = false;
 
         try {
-            this.dbConnection.openConnection();
+            //this.dbConnection.openConnection();
             preparedStatement = this.dbConnection.getPreparedStatement(sql);
             //preparedStatement.setString(1, email);
             //preparedStatement.setString(2, passwort);
@@ -221,7 +221,7 @@ public class BenutzerDao {
 
         try{
             statement = this.dbConnection.getStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM carlook.vertriebler AS v WHERE v.id_vertriebler='" + benutzer.getId() + "'");
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM carlook.endnutzer AS v WHERE v.id_endnutzer='" + benutzer.getId() + "'");
 
             if(resultSet.next()) {
                 endnutzer = new Endnutzer();
@@ -230,8 +230,10 @@ public class BenutzerDao {
                 endnutzer.setPasswort(benutzer.getPasswort());
                 endnutzer.setId(benutzer.getId());
             }
-            //Kein Vertriebler mit der BenutzerID gefunden
-            else throw new NoSuchUserOrPasswordException();
+            //Kein Endnutzer mit der BenutzerID gefunden
+            else {
+                throw new NoSuchUserOrPasswordException();
+            }
 
         }catch (SQLException ex){
 

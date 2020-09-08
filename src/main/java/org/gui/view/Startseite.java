@@ -106,8 +106,12 @@ public class Startseite extends VerticalLayout implements View {
                     rolle = "Endnutzer";
                 }else if (checkBoxVertriebler.getValue() == true) {
                     rolle = "Vertriebler";
+                }else if (checkBoxVertriebler.getValue() == true && checkBoxEndnutzer.getValue() == true) {
+                    Notification.show("Sie dürfen nur eine Rolle Auswählen!", Notification.Type.ERROR_MESSAGE);
+                    //EXCP tbd
                 }else {
                    Notification.show("Sie müssen eine Rolle Auswählen!", Notification.Type.ERROR_MESSAGE);
+                   //EXCP tbd
                 }
 
 

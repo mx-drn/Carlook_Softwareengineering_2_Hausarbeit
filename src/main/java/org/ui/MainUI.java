@@ -10,6 +10,8 @@ import com.vaadin.navigator.Navigator;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.UI;
+import org.gui.view.MainEndnutzer;
+import org.gui.view.MainVertriebler;
 import org.services.util.ViewUtil;
 import org.gui.view.Startseite;
 import org.model.entity.Benutzer;
@@ -44,6 +46,9 @@ public class MainUI extends UI {
     protected void init(VaadinRequest vaadinRequest) {
         Navigator navi = new Navigator(this, this);
         navi.addView(ViewUtil.MAIN, Startseite.class);
+        navi.addView(ViewUtil.VIEWENDNNUTZER, MainEndnutzer.class);
+        navi.addView(ViewUtil.VIEWVERTRIEBLER, MainVertriebler.class);
+
         UI.getCurrent().getNavigator().navigateTo(ViewUtil.MAIN);
     }
 

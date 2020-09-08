@@ -23,7 +23,6 @@ public class LoginControl {
         try {
             //LoginControl.navigate(
             LoginControl.checkAuthentication(email, passwort);
-
             Notification.show("Login erfolgreich", Notification.Type.HUMANIZED_MESSAGE);
         }
         //Datenbankfehler
@@ -45,6 +44,7 @@ public class LoginControl {
                 ((MainUI) UI.getCurrent()).setBenutzer(benutzer);
                 UI.getCurrent().getNavigator().navigateTo(ViewUtil.VIEWENDNNUTZER);
             }
+            //Benutzer ist Vertriebler
             else if(benutzer.getRolle().equals(Rolle.VERTRIEBLER)) {
                 ((MainUI) UI.getCurrent()).setBenutzer(benutzer);
                 UI.getCurrent().getNavigator().navigateTo(ViewUtil.VIEWVERTRIEBLER);
