@@ -41,7 +41,7 @@ public class BenutzerDao {
         boolean failed = false;
 
         try {
-            if (this.dbConnection.connectionIsClosed()) this.dbConnection.openConnection();
+            this.dbConnection.openConnection();
             preparedStatement = this.dbConnection.getPreparedStatement(sql);
             //preparedStatement.setString(1, email);
             //preparedStatement.setString(2, passwort);

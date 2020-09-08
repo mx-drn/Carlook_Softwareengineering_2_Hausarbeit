@@ -91,13 +91,29 @@ public class Startseite extends VerticalLayout implements View {
         TextField passwortReg = new TextField("Passwort");
         passwort.setDescription("Ihr Passwort");
 
+        //Rolle wählen
+        CheckBox checkBoxEndnutzer = new CheckBox("Ich bin Endnutzer");
+        CheckBox checkBoxVertriebler = new CheckBox("Ich bin Vertriebler");
+
         Button registrieren = new Button("Registrieren");
 
         registrieren.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent clickEvent) {
 /*                try {
+                String rolle = "";
+                if(checkBoxEndnutzer.getValue() == true) {
+                    rolle = "Endnutzer";
+                }else if (checkBoxVertriebler.getValue() == true) {
+                    rolle = "Vertriebler";
+                }else {
+                   Notification.show("Sie müssen eine Rolle Auswählen!", Notification.Type.ERROR_MESSAGE);
+                }
+
+
                     //DB anbindung
+
+
                 } catch (NoCarlookEmailAdresseException e) {
                     //Fehler beim Authentifizieren
                     Notification.show("Ihre Email ist keine korrekte \"@carlook.de\" - Adresse!", Notification.Type.ERROR_MESSAGE);
@@ -109,6 +125,9 @@ public class Startseite extends VerticalLayout implements View {
         //tabRechts.addComponent(horizontalLayoutName);
         tabRechts.addComponent(emailReg);
         tabRechts.addComponent(passwortReg);
+        tabRechts.addComponent(checkBoxEndnutzer);
+        tabRechts.addComponent(checkBoxVertriebler);
+
         tabRechts.addComponent(registrieren);
         tabLinks.setStyleName(StylesheetUtil.tabsheet);
         tabRechts.setStyleName(StylesheetUtil.tabsheet);
