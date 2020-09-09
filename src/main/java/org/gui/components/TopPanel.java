@@ -36,6 +36,8 @@ public class TopPanel extends HorizontalLayout {
                     UI.getCurrent().getNavigator().navigateTo(ViewUtil.VIEWENDNNUTZER);
                 }else if (benutzer.getRolle().equals(Rolle.VERTRIEBLER)) {
                     UI.getCurrent().getNavigator().navigateTo(ViewUtil.VIEWVERTRIEBLER);
+                }else{
+                    UI.getCurrent().getNavigator().navigateTo(ViewUtil.MAIN);
                 }
             }
         });

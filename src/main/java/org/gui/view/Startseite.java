@@ -2,19 +2,17 @@ package org.gui.view;
 
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
-import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.*;
 import org.control.LoginControl;
+import org.control.RegistrierungsControl;
+import org.control.exception.RolesException;
 import org.control.exception.NoCarlookEmailAdresseException;
 import org.control.exception.NoSuchUserOrPasswordException;
 import org.gui.components.Footer;
 import org.gui.components.SchriftzugCarlook;
-import org.gui.components.TopPanel;
+import org.services.util.CheckCarlookEmail;
 import org.services.util.StylesheetUtil;
 import org.services.util.Whitespace;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class Startseite extends VerticalLayout implements View {
     Whitespace whitespace = new Whitespace();
@@ -100,7 +98,7 @@ public class Startseite extends VerticalLayout implements View {
         registrieren.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent clickEvent) {
-/*                try {
+                try {
                 String rolle = "";
                 if(checkBoxEndnutzer.getValue() == true) {
                     rolle = "Endnutzer";
@@ -108,22 +106,31 @@ public class Startseite extends VerticalLayout implements View {
                     rolle = "Vertriebler";
                 }else if (checkBoxVertriebler.getValue() == true && checkBoxEndnutzer.getValue() == true) {
                     Notification.show("Sie dürfen nur eine Rolle Auswählen!", Notification.Type.ERROR_MESSAGE);
-                    //EXCP tbd
+                    throw new RolesException();
                 }else {
                    Notification.show("Sie müssen eine Rolle Auswählen!", Notification.Type.ERROR_MESSAGE);
-                   //EXCP tbd
+                   throw new RolesException();
                 }
 
+                String reg_email = emailReg.getValue();
 
-                    //DB anbindung
+                //Wenn Vertriebler -> ist es eine Carlook.de E-Mail?
+                if(rolle.equals("Vertriebler")) {
+                    if(!CheckCarlookEmail.istCarlookEmail(reg_email)) {
+                        emailReg.setValue("");
+                        throw new NoCarlookEmailAdresseException();
+                    }
+                }
 
+                String reg_passwort = passwortReg.getValue();
+                RegistrierungsControl.registrierungBenutzer(reg_email, reg_passwort, rolle);
 
-                } catch (NoCarlookEmailAdresseException e) {
+                } catch (NoCarlookEmailAdresseException | RolesException e) {
                     //Fehler beim Authentifizieren
                     Notification.show("Ihre Email ist keine korrekte \"@carlook.de\" - Adresse!", Notification.Type.ERROR_MESSAGE);
                     emailReg.setValue("");
                 }
-*/            }
+            }
         });
 
         //tabRechts.addComponent(horizontalLayoutName);

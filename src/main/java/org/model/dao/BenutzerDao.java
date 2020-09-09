@@ -99,12 +99,15 @@ public class BenutzerDao {
             // Vergebene Benutzerid ermitteln
             this.setLatestUserId(benutzer);
 
-            // Student o. Unternehmen speichern
+            // Endnutzer o. Vertriebler speichern
 
-            if(benutzer.getRolle().equals(Rolle.ENDNUTZER)) this.saveEndnutzer((Endnutzer) benutzer);
-            else if (benutzer.getRolle().equals(Rolle.VERTRIEBLER))this.saveVertriebler((Vertriebler) benutzer);
+            if(benutzer.getRolle().equals(Rolle.ENDNUTZER)) {
+                this.saveEndnutzer((Endnutzer) benutzer);
+            }else if (benutzer.getRolle().equals(Rolle.VERTRIEBLER)) {
+                this.saveVertriebler((Vertriebler) benutzer);
+            }
 
-            this.dbConnection.commit();
+            //this.dbConnection.commit();
         }
         // Fehlerhandling
         catch (SQLException | DataBaseException e) {
@@ -257,7 +260,7 @@ public class BenutzerDao {
         try {
             statement = this.dbConnection.getStatement();
             // Vergebene Benutzerid ermitteln
-            ResultSet result = statement.executeQuery("SELECT MAX(b.benutzerid) FROM production.benutzer as b");
+            ResultSet result = statement.executeQuery("SELECT MAX(b.id_benutzer) FROM carlook.benutzer as b");
             result.next();
             benutzer.setId(result.getInt(1));
         }

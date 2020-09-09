@@ -57,6 +57,7 @@ public class DBConnection {
     }
 
     public PreparedStatement getPreparedStatement(String sql) throws SQLException {
+        this.openConnection();
         return this.connection.prepareStatement(sql);
     }
     /**
