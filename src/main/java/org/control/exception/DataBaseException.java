@@ -1,6 +1,8 @@
 package org.control.exception;
 
-public class DataBaseException extends Exception {
+import java.sql.SQLException;
+
+public class DataBaseException extends SQLException {
     private String reason = "";
 
     public DataBaseException(String reason) {

@@ -1,5 +1,7 @@
 package org.services.db;
 
+import org.control.exception.DataBaseException;
+
 import java.sql.*;
 
 public class DBConnection {
@@ -54,6 +56,45 @@ public class DBConnection {
             s = this.connection.prepareStatement(sql);
         }
         return s;
+    }
+
+    /**
+     * @param sql
+     * @param values
+     * @param types
+     * @param permutationFactor
+     * @param context
+     * @return
+     * @throws DataBaseException
+     */
+    public PreparedStatement buildStatement(String sql, Object[] values, Class[] types, int permutationFactor, QueryContext context) throws DataBaseException {
+        if (values != null && types != null && values.length != types.length) throw new IllegalArgumentException("Length of values and types have to be equal");
+        PreparedStatement statement = null;
+        try {
+            this.openConnection();
+            statement = this.getPreparedStatement(sql, context);
+            if (statement != null
+                    && values != null && values.length > 0
+                    && types != null && types.length > 0) {
+                for(int i=0; i< Math.max(1, permutationFactor) ; i++){
+                    for (int j=0; j < values.length; j++) {
+                        Class type = types[j];
+                        Object value = values[j];
+                        int parameterIndex = i*values.length+j+1;
+                        if(int.class.isAssignableFrom(type) || Integer.class.isAssignableFrom(type)) statement.setInt(parameterIndex, (int)value);
+                        else if(String.class.isAssignableFrom(type)) statement.setString(parameterIndex, (String)value);
+                        else if(double.class.isAssignableFrom(type) || Double.class.isAssignableFrom(type)) statement.setDouble(parameterIndex, (double)value);
+                        else if(boolean.class.isAssignableFrom(type) || Boolean.class.isAssignableFrom(type)) statement.setBoolean(parameterIndex, (boolean)value);
+                    }
+                }
+
+
+            }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return statement;
     }
 
     public PreparedStatement getPreparedStatement(String sql) throws SQLException {

@@ -4,7 +4,6 @@ import com.vaadin.ui.Notification;
 import org.control.exception.DataBaseException;
 import org.model.dao.BenutzerDao;
 import org.model.dao.DaoFactory;
-import org.model.entity.Benutzer;
 import org.model.entity.Endnutzer;
 import org.model.entity.Vertriebler;
 
@@ -22,7 +21,7 @@ public class RegistrierungsControl {
                 endnutzer.setRolle(rolle);
 
                 //Benutzer in DB einfügen
-                benutzerDao.saveUser(endnutzer);
+                benutzerDao.createBenutzer(endnutzer);
             }else if (rolle.equals("Vertriebler")){
                 Vertriebler vertriebler = new Vertriebler();
                 vertriebler.setEmail(email);
@@ -30,7 +29,7 @@ public class RegistrierungsControl {
                 vertriebler.setRolle(rolle);
 
                 //Benutzer in DB einfügen
-                benutzerDao.saveUser(vertriebler);
+                benutzerDao.createBenutzer(vertriebler);
             }
 
             Notification.show("Registrierung erfolgreich", Notification.Type.HUMANIZED_MESSAGE);

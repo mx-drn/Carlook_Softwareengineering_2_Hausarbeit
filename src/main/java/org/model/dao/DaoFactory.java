@@ -23,4 +23,8 @@ public class DaoFactory {
         return BenutzerDao.getInstance();
     }
 
+    public AutoDao getAutoDao() throws DataBaseException {
+        return AutoDao.getInstance();
+    }
+
 }
