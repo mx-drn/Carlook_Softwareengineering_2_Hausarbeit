@@ -1,15 +1,13 @@
 package org.model.dao;
 
+import com.vaadin.ui.UI;
 import org.control.exception.DataBaseException;
 import org.control.exception.NoSuchAutoException;
 import org.model.dto.AutoDTO;
 import org.model.entity.Auto;
-import org.model.entity.Benutzer;
-import org.model.entity.Endnutzer;
-import org.model.entity.Vertriebler;
 import org.services.db.DBConnection;
 import org.services.db.QueryContext;
-import org.services.util.Rolle;
+import org.ui.MainUI;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -140,7 +138,7 @@ public class AutoDao {
     public ArrayList<AutoDTO> searchAuto(String[] request) {
         ArrayList<AutoDTO> result = new ArrayList<>();
         if(request == null || request.length == 0) return result;
-        String sql = "SELECT DISTINCT marke, baujahr, beschreibung FROM carlook.suche_auto " +
+        String sql = "SELECT DISTINCT marke, baujahr, beschreibung FROM carlook.auto_suche " +
                 "WHERE to_tsvector('german', COALESCE(marke,'') || ' ' || COALESCE(baujahr,'') || ' ' || " +
                 "COALESCE(name,'')) @@ to_tsquery('german', ?)";
 
@@ -183,7 +181,7 @@ public class AutoDao {
 
     public void createAuto(AutoDTO autoDTO) throws DataBaseException {
         Auto auto = new Auto(autoDTO);
-        String sql = "INSERT INTO carlook.auto (marke, baujahr, beschreibung) VALUES (?,?,?)";
+        String sql = "INSERT INTO carlook.auto (marke, baujahr, beschreibung, id_vertriebler) VALUES (?,?,?,?)";
         PreparedStatement preparedStatement = null;
         boolean failed = false;
         try {
@@ -193,10 +191,11 @@ public class AutoDao {
             preparedStatement.setString(1, auto.getMarke());
             preparedStatement.setInt(2, auto.getBaujahr());
             preparedStatement.setString(3, auto.getBeschreibung());
+            preparedStatement.setInt(4, ((MainUI) UI.getCurrent()).getBenutzer().getId());
             preparedStatement.executeUpdate();
 
             // Vergebene Benutzerid ermitteln
-            this.setLatestUserId(auto);
+            this.setLastAutoId(auto);
 
         }
         // Fehlerhandling
@@ -216,11 +215,11 @@ public class AutoDao {
                 failed = true;
             }
             // Wenn ein Fehler aufgetreten ist
-            if (failed) throw new DataBaseException("Beim Speichern des Benutzers ist ein Fehler aufgetreten!");
+            if (failed) throw new DataBaseException("Beim Speichern des Autos ist ein Fehler aufgetreten!");
         }
     }
 
-    private void setLatestUserId(Auto auto) throws DataBaseException {
+    private void setLastAutoId(Auto auto) throws DataBaseException {
         Statement statement = null;
         boolean failed = false;
         try {

@@ -71,11 +71,11 @@ public class Startseite extends VerticalLayout implements View {
 
         //E-Mail Adresse für das Registrieren
         TextField emailReg = new TextField("E-Mail");
-        email.setDescription("Ihre E-Mail Adresse");
+        emailReg.setDescription("Ihre E-Mail Adresse");
 
         //Passwort
         TextField passwortReg = new TextField("Passwort");
-        passwort.setDescription("Ihr Passwort");
+        passwortReg.setDescription("Ihr Passwort");
 
         //Rolle wählen
         CheckBox checkBoxEndnutzer = new CheckBox("Ich bin Endnutzer");
@@ -111,7 +111,11 @@ public class Startseite extends VerticalLayout implements View {
                 }
 
                 String reg_passwort = passwortReg.getValue();
-                RegistrierungsControl.registrierungBenutzer(reg_email, reg_passwort, rolle);
+                if(!emailReg.isEmpty() && !passwortReg.isEmpty()) {
+                    RegistrierungsControl.registrierungBenutzer(reg_email, reg_passwort, rolle);
+                }else{
+                    Notification.show("Sie müssen alle Felder ausfüllen!", Notification.Type.ERROR_MESSAGE);
+                }
 
                 } catch (NoCarlookEmailAdresseException | RolesException e) {
                     //Fehler beim Authentifizieren
