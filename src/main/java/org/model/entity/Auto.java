@@ -1,5 +1,7 @@
 package org.model.entity;
 
+import org.model.dto.AutoDTO;
+
 public class Auto {
     private int id;
     private String marke;
@@ -15,6 +17,14 @@ public class Auto {
         this.baujahr = baujahr;
         this.beschreibung = beschreibung;
         this.id_vertriebler = id_vertriebler;
+    }
+
+    public Auto(AutoDTO autoDTO) {
+        this.id = autoDTO.getId();
+        this.marke = autoDTO.getMarke();
+        this.baujahr = autoDTO.getBaujahr();
+        this.beschreibung = autoDTO.getBeschreibung();
+        this.id_vertriebler = autoDTO.getId_vertriebler();
     }
 
     public int getId() {
@@ -56,4 +66,5 @@ public class Auto {
     public void setId_vertriebler(int id_vertriebler) {
         this.id_vertriebler = id_vertriebler;
     }
+
 }

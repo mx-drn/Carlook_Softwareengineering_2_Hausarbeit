@@ -1,16 +1,12 @@
 package org.model.dao;
 
 import org.control.exception.DataBaseException;
-import org.model.entity.Benutzer;
-import org.model.entity.Endnutzer;
 import org.services.db.DBConnection;
-import org.services.proxy.proxySucheAuto;
+import org.services.proxy.ProxySucheAutoAPI;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
-public class EndnutzerDao implements proxySucheAuto {
+public class EndnutzerDao {
 
     private static EndnutzerDao instance;
     private DBConnection dbConnection = null;

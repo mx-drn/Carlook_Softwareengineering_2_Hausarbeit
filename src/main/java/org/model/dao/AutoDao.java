@@ -2,13 +2,19 @@ package org.model.dao;
 
 import org.control.exception.DataBaseException;
 import org.control.exception.NoSuchAutoException;
+import org.model.dto.AutoDTO;
 import org.model.entity.Auto;
+import org.model.entity.Benutzer;
+import org.model.entity.Endnutzer;
+import org.model.entity.Vertriebler;
 import org.services.db.DBConnection;
 import org.services.db.QueryContext;
+import org.services.util.Rolle;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 public class AutoDao {
@@ -30,7 +36,7 @@ public class AutoDao {
         return instance;
     }
 
-    public Auto getAuto(String marke, int baujahr, String beschreibung) throws DataBaseException, NoSuchAutoException {
+    public AutoDTO getAuto(String marke, int baujahr, String beschreibung) throws DataBaseException, NoSuchAutoException {
         String sql = "SELECT * FROM carlook.auto AS a WHERE a.marke= '" + marke + "' AND a.baujahr= '" + baujahr + "' AND a.beschreibung= '" + beschreibung + "'";
         PreparedStatement preparedStatement = null;
         Auto auto = null;
@@ -66,11 +72,12 @@ public class AutoDao {
             }
             if(failed) throw new DataBaseException("Beim Laden der Autos ist ein Fehler aufgetreten!");
         }
+        AutoDTO autoDTO = new AutoDTO(auto);
 
-        return auto;
+        return autoDTO;
     }
 
-    public Auto getAuto(int id) throws DataBaseException, NoSuchAutoException {
+    public AutoDTO getAuto(int id) throws DataBaseException, NoSuchAutoException {
         String sql = "SELECT * FROM carlook.auto AS a WHERE a.id_auto= '" + id + "'";
         PreparedStatement preparedStatement = null;
         Auto auto = null;
@@ -106,8 +113,9 @@ public class AutoDao {
             }
             if(failed) throw new DataBaseException("Beim Laden der Autos ist ein Fehler aufgetreten!");
         }
+        AutoDTO autoDTO = new AutoDTO(auto);
 
-        return auto;
+        return autoDTO;
     }
 
     public void delete (int id) {
@@ -129,8 +137,8 @@ public class AutoDao {
 
     }
 
-    public ArrayList<Auto> searchAuto(String[] request) {
-        ArrayList<Auto> result = new ArrayList<>();
+    public ArrayList<AutoDTO> searchAuto(String[] request) {
+        ArrayList<AutoDTO> result = new ArrayList<>();
         if(request == null || request.length == 0) return result;
         String sql = "SELECT DISTINCT marke, baujahr, beschreibung FROM carlook.suche_auto " +
                 "WHERE to_tsvector('german', COALESCE(marke,'') || ' ' || COALESCE(baujahr,'') || ' ' || " +
@@ -154,11 +162,11 @@ public class AutoDao {
 
 
                 while(resultSet.next()) {
-                    Auto auto = new Auto();
-                    auto.setMarke(resultSet.getString(1));
-                    auto.setBaujahr(resultSet.getInt(2));
-                    auto.setBeschreibung(resultSet.getString(3));
-                    result.add(auto);
+                    AutoDTO autoDTO = new AutoDTO();
+                    autoDTO.setMarke(resultSet.getString(1));
+                    autoDTO.setBaujahr(resultSet.getInt(2));
+                    autoDTO.setBeschreibung(resultSet.getString(3));
+                    result.add(autoDTO);
                 }
 
                 resultSet.beforeFirst();
@@ -171,6 +179,79 @@ public class AutoDao {
 
 
         return result;
+    }
+
+    public void createAuto(AutoDTO autoDTO) throws DataBaseException {
+        Auto auto = new Auto(autoDTO);
+        String sql = "INSERT INTO carlook.auto (marke, baujahr, beschreibung) VALUES (?,?,?)";
+        PreparedStatement preparedStatement = null;
+        boolean failed = false;
+        try {
+            preparedStatement = this.dbConnection.getPreparedStatement(sql);
+
+            // Benutzer speichern
+            preparedStatement.setString(1, auto.getMarke());
+            preparedStatement.setInt(2, auto.getBaujahr());
+            preparedStatement.setString(3, auto.getBeschreibung());
+            preparedStatement.executeUpdate();
+
+            // Vergebene Benutzerid ermitteln
+            this.setLatestUserId(auto);
+
+        }
+        // Fehlerhandling
+        catch (SQLException e) {
+            e.printStackTrace();
+            failed = true;
+        }
+
+        // Ressourcen schließen
+        finally {
+            try {
+                if(preparedStatement != null) preparedStatement.close();
+                this.dbConnection.closeConnection();
+            }
+            catch(SQLException e) {
+                e.printStackTrace();
+                failed = true;
+            }
+            // Wenn ein Fehler aufgetreten ist
+            if (failed) throw new DataBaseException("Beim Speichern des Benutzers ist ein Fehler aufgetreten!");
+        }
+    }
+
+    private void setLatestUserId(Auto auto) throws DataBaseException {
+        Statement statement = null;
+        boolean failed = false;
+        try {
+            statement = this.dbConnection.getStatement();
+            // Vergebene Benutzerid ermitteln
+            ResultSet result = statement.executeQuery("SELECT MAX(a.id_auto) FROM carlook.auto as a");
+            result.next();
+            auto.setId(result.getInt(1));
+        }
+        catch(SQLException e) {
+            e.printStackTrace();
+            failed = true;
+        }
+        finally {
+            try {
+                if(statement != null) statement.close();
+            }
+            catch(SQLException e) {
+                e.printStackTrace();
+                failed = true;
+            }
+            if (failed) throw new DataBaseException("");
+        }
+    }
+
+    public void closeConnection() {
+        try {
+            this.dbConnection.closeConnection();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
 }
