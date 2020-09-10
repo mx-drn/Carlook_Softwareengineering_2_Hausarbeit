@@ -86,6 +86,21 @@ public class MainEndnutzer extends VerticalLayout implements View {
         sucheHori.setComponentAlignment(suchfeld, Alignment.MIDDLE_CENTER);
         sucheHori.setComponentAlignment(sucheButton, Alignment.MIDDLE_CENTER);
 
+        //Reservierungsbutton
+        Button reservieren = new Button("Reservieren");
+
+        Button.ClickListener reservierungsListener = new Button.ClickListener() {
+            @Override
+            public void buttonClick(Button.ClickEvent clickEvent) {
+                if(autoSelektiert != null) {
+                    //TODO
+                    //Reservierungsfunktion ergänzen
+                }else{
+                    Notification.show("Sie müssen ein Auto auswählen um es reservieren zu können.", Notification.Type.WARNING_MESSAGE);
+                }
+            }
+        };
+
         addComponent(sucheHori);
         setComponentAlignment(sucheHori, Alignment.MIDDLE_CENTER);
 
@@ -150,21 +165,6 @@ public class MainEndnutzer extends VerticalLayout implements View {
 
 
                     grid.removeAllColumns();
-
-                    //Reservierungsbutton
-                    Button reservieren = new Button("Reservieren");
-
-                    Button.ClickListener reservierungsListener = new Button.ClickListener() {
-                        @Override
-                        public void buttonClick(Button.ClickEvent clickEvent) {
-                            if(autoSelektiert != null) {
-                                //TODO
-                                //Reservierungsfunktion ergänzen
-                            }else{
-                                Notification.show("Sie müssen ein Auto auswählen um es reservieren zu können.", Notification.Type.WARNING_MESSAGE);
-                            }
-                        }
-                    };
 
                     if(daten==null || daten.size() == 0){
                         Notification.show("Suchanfrage hat keine Autos geliefert.", Notification.Type.HUMANIZED_MESSAGE);
