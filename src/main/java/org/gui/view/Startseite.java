@@ -23,7 +23,6 @@ public class Startseite extends VerticalLayout implements View {
 
     public void setUp () {
         //Erstellen des Hintergrundes
-        //StylesheetUtil.loadBackground(this, "startseite_bg");
         setStyleName("bg");
         setSizeFull();
 
@@ -70,17 +69,6 @@ public class Startseite extends VerticalLayout implements View {
         tabLinks.addComponent(anmelden);
         tabLinks.setMargin(true);
 
-/*        //Name Vorname für die Registrierung
-        TextField vorname = new TextField("Vorname");
-        vorname.setDescription("Ihr Vorname");
-
-        TextField nachname = new TextField("Nachname");
-        nachname.setDescription("Ihr Nachname");
-
-        HorizontalLayout horizontalLayoutName = new HorizontalLayout();
-        horizontalLayoutName.addComponent(vorname);
-        horizontalLayoutName.addComponent(nachname);
-*/
         //E-Mail Adresse für das Registrieren
         TextField emailReg = new TextField("E-Mail");
         email.setDescription("Ihre E-Mail Adresse");

@@ -21,30 +21,7 @@ public class TopPanel extends HorizontalLayout {
         this.addStyleName(StylesheetUtil.toppanel);
         this.setWidth("100%");
 
-
-        HorizontalLayout mainHorLayout = new HorizontalLayout();
         HorizontalLayout menuBarHorLayout = new HorizontalLayout();
-
-        //Logo und Titel einbinden
-        ThemeResource resource = new ThemeResource("img/carlook_logo.jpg");
-        Image logo = new Image(null, resource);
-        logo.setWidth("150px");
-        logo.addClickListener(new MouseEvents.ClickListener() {
-            @Override
-            public void click(MouseEvents.ClickEvent clickEvent) {
-                if (benutzer.getRolle().equals(Rolle.ENDNUTZER)) {
-                    UI.getCurrent().getNavigator().navigateTo(ViewUtil.VIEWENDNNUTZER);
-                }else if (benutzer.getRolle().equals(Rolle.VERTRIEBLER)) {
-                    UI.getCurrent().getNavigator().navigateTo(ViewUtil.VIEWVERTRIEBLER);
-                }else{
-                    UI.getCurrent().getNavigator().navigateTo(ViewUtil.MAIN);
-                }
-            }
-        });
-
-        mainHorLayout.addComponent(logo);
-        mainHorLayout.setComponentAlignment(logo, Alignment.MIDDLE_LEFT);
-        this.addComponent(mainHorLayout);
 
         // Menubar erzeugen
 
@@ -62,6 +39,7 @@ public class TopPanel extends HorizontalLayout {
                 }
             });
 
+            menuBarHorLayout.addComponent(menuBar);
             addComponent(menuBarHorLayout);
             setComponentAlignment(menuBarHorLayout, Alignment.MIDDLE_RIGHT);
         }
