@@ -3,7 +3,7 @@ package org.services.proxy;
 import org.control.exception.DataBaseException;
 import org.model.dao.AutoDao;
 import org.model.dao.DaoFactory;
-import org.model.dto.AutoDTO;
+import org.model.entity.Auto;
 
 import java.util.ArrayList;
 
@@ -15,7 +15,7 @@ public class ProxySucheAuto implements ProxySucheAutoAPI {
     }
 
     @Override
-    public ArrayList<AutoDTO> searchAuto(String[] request) throws DataBaseException {
+    public ArrayList<Auto> searchAuto(String[] request) throws DataBaseException {
         return this.autoDao.searchAuto(request);
     }
 

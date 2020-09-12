@@ -3,7 +3,6 @@ package org.model.dao;
 import com.vaadin.ui.UI;
 import org.control.exception.DataBaseException;
 import org.control.exception.NoSuchAutoException;
-import org.model.dto.AutoDTO;
 import org.model.entity.Auto;
 import org.services.db.DBConnection;
 import org.services.db.QueryContext;
@@ -34,10 +33,10 @@ public class AutoDao {
         return instance;
     }
 
-    public AutoDTO getAuto(String marke, int baujahr, String beschreibung) throws DataBaseException, NoSuchAutoException {
+    public Auto getAuto(String marke, int baujahr, String beschreibung) throws DataBaseException, NoSuchAutoException {
         String sql = "SELECT * FROM carlook.auto AS a WHERE a.marke= '" + marke + "' AND a.baujahr= '" + baujahr + "' AND a.beschreibung= '" + beschreibung + "'";
         PreparedStatement preparedStatement = null;
-        Auto auto = null;
+        org.model.entity.Auto auto = null;
         boolean failed = false;
 
         try {
@@ -45,7 +44,7 @@ public class AutoDao {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
-                auto = new Auto();
+                auto = new org.model.entity.Auto();
                 auto.setId(resultSet.getInt("id_auto"));
                 auto.setMarke(resultSet.getString("marke"));
                 auto.setBaujahr(resultSet.getInt("baujahr"));
@@ -70,15 +69,14 @@ public class AutoDao {
             }
             if(failed) throw new DataBaseException("Beim Laden der Autos ist ein Fehler aufgetreten!");
         }
-        AutoDTO autoDTO = new AutoDTO(auto);
 
-        return autoDTO;
+        return auto;
     }
 
-    public AutoDTO getAuto(int id) throws DataBaseException, NoSuchAutoException {
+    public Auto getAuto(int id) throws DataBaseException, NoSuchAutoException {
         String sql = "SELECT * FROM carlook.auto AS a WHERE a.id_auto= '" + id + "'";
         PreparedStatement preparedStatement = null;
-        Auto auto = null;
+        org.model.entity.Auto auto = null;
         boolean failed = false;
 
         try {
@@ -86,7 +84,7 @@ public class AutoDao {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
-                auto = new Auto();
+                auto = new org.model.entity.Auto();
                 auto.setId(resultSet.getInt("id_auto"));
                 auto.setMarke(resultSet.getString("marke"));
                 auto.setBaujahr(resultSet.getInt("baujahr"));
@@ -111,9 +109,7 @@ public class AutoDao {
             }
             if(failed) throw new DataBaseException("Beim Laden der Autos ist ein Fehler aufgetreten!");
         }
-        AutoDTO autoDTO = new AutoDTO(auto);
-
-        return autoDTO;
+        return auto;
     }
 
     public void delete (int id) {
@@ -135,12 +131,12 @@ public class AutoDao {
 
     }
 
-    public ArrayList<AutoDTO> searchAuto(String[] request) {
-        ArrayList<AutoDTO> result = new ArrayList<>();
+    public ArrayList<Auto> searchAuto(String[] request) {
+        ArrayList<Auto> result = new ArrayList<>();
         if(request == null || request.length == 0) return result;
         String sql = "SELECT DISTINCT marke, baujahr, beschreibung FROM carlook.auto_suche " +
-                "WHERE to_tsvector('german', COALESCE(marke,'') || ' ' || COALESCE(baujahr,'') || ' ' || " +
-                "COALESCE(name,'')) @@ to_tsquery('german', ?)";
+                "WHERE to_tsvector('german', COALESCE(marke,'') || ' ' || COALESCE(to_char(baujahr,'')) || ' ' || " +
+                "COALESCE(beschreibung,'')) @@ to_tsquery('german', ?)";
 
         String[] values = {request[0].equals("") ? "" : request[0] + ":*"};
         for (int i=1; i<request.length; i++) {
@@ -160,11 +156,11 @@ public class AutoDao {
 
 
                 while(resultSet.next()) {
-                    AutoDTO autoDTO = new AutoDTO();
-                    autoDTO.setMarke(resultSet.getString(1));
-                    autoDTO.setBaujahr(resultSet.getInt(2));
-                    autoDTO.setBeschreibung(resultSet.getString(3));
-                    result.add(autoDTO);
+                    Auto auto = new Auto();
+                    auto.setMarke(resultSet.getString(1));
+                    auto.setBaujahr(resultSet.getInt(2));
+                    auto.setBeschreibung(resultSet.getString(3));
+                    result.add(auto);
                 }
 
                 resultSet.beforeFirst();
@@ -179,8 +175,7 @@ public class AutoDao {
         return result;
     }
 
-    public void createAuto(AutoDTO autoDTO) throws DataBaseException {
-        Auto auto = new Auto(autoDTO);
+    public void createAuto(Auto auto) throws DataBaseException {
         String sql = "INSERT INTO carlook.auto (marke, baujahr, beschreibung, id_vertriebler) VALUES (?,?,?,?)";
         PreparedStatement preparedStatement = null;
         boolean failed = false;

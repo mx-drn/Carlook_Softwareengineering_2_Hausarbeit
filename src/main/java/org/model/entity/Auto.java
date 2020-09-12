@@ -20,11 +20,9 @@ public class Auto {
     }
 
     public Auto(AutoDTO autoDTO) {
-        this.id = autoDTO.getId();
         this.marke = autoDTO.getMarke();
         this.baujahr = autoDTO.getBaujahr();
         this.beschreibung = autoDTO.getBeschreibung();
-        this.id_vertriebler = autoDTO.getId_vertriebler();
     }
 
     public int getId() {

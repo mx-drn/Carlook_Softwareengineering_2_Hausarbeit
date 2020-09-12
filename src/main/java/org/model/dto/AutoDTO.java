@@ -11,7 +11,7 @@ public class AutoDTO {
 
     public AutoDTO () {}
 
-    public AutoDTO (int id, String marke, int baujahr, String beschreibung, int id_vertriebler) {
+    public AutoDTO(int id, String marke, int baujahr, String beschreibung, int id_vertriebler) {
         this.id = id;
         this.marke = marke;
         this.baujahr = baujahr;
@@ -20,11 +20,9 @@ public class AutoDTO {
     }
 
     public AutoDTO(Auto auto) {
-        this.id = auto.getId();
         this.marke = auto.getMarke();
         this.baujahr = auto.getBaujahr();
         this.beschreibung = auto.getBeschreibung();
-        this.id_vertriebler = auto.getId_vertriebler();
     }
 
     public int getId() {

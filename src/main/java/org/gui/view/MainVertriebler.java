@@ -1,6 +1,5 @@
 package org.gui.view;
 
-import com.sun.corba.se.impl.orb.ParserTable;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.ui.*;
@@ -8,7 +7,7 @@ import org.control.AngebotErstellenControl;
 import org.gui.components.Footer;
 import org.gui.components.SchriftzugCarlook;
 import org.gui.components.TopPanel;
-import org.model.dto.AutoDTO;
+import org.model.entity.Auto;
 import org.model.entity.Benutzer;
 import org.services.util.StylesheetUtil;
 import org.services.util.ViewUtil;
@@ -29,6 +28,8 @@ public class MainVertriebler extends VerticalLayout implements View {
     }
 
     public void setUp () {
+        setStyleName(StylesheetUtil.angemeldetBg);
+
         //Logo und Titel einbinden
         SchriftzugCarlook schriftzugCarlook = new SchriftzugCarlook();
         addComponent(schriftzugCarlook);
@@ -68,12 +69,12 @@ public class MainVertriebler extends VerticalLayout implements View {
             public void buttonClick(Button.ClickEvent clickEvent) {
 
                 if(!automarke.isEmpty() && !baujahr.isEmpty() && !beschreibung.isEmpty()) {
-                    AutoDTO autoDTO = new AutoDTO();
-                    autoDTO.setMarke(automarke.getValue());
-                    autoDTO.setBaujahr(Integer.parseInt(baujahr.getValue()));
-                    autoDTO.setBeschreibung(beschreibung.getValue());
+                    Auto auto = new Auto();
+                    auto.setMarke(automarke.getValue());
+                    auto.setBaujahr(Integer.parseInt(baujahr.getValue()));
+                    auto.setBeschreibung(beschreibung.getValue());
 
-                    AngebotErstellenControl.angebotErstellen(autoDTO);
+                    AngebotErstellenControl.angebotErstellen(auto);
                     Notification.show("Auto erfolgreich hinzugefügt!", Notification.Type.HUMANIZED_MESSAGE);
                     automarke.setValue("");
                     baujahr.setValue("");

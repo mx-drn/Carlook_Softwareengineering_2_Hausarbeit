@@ -4,11 +4,11 @@ import com.vaadin.ui.Notification;
 import org.control.exception.DataBaseException;
 import org.model.dao.AutoDao;
 import org.model.dao.DaoFactory;
-import org.model.dto.AutoDTO;
+import org.model.entity.Auto;
 
 public class AngebotErstellenControl {
 
-    public static void angebotErstellen(AutoDTO autoDTO) {
+    public static void angebotErstellen(Auto autoDTO) {
         try {
             AutoDao autoDao = DaoFactory.getInstance().getAutoDao();
             autoDao.createAuto(autoDTO);

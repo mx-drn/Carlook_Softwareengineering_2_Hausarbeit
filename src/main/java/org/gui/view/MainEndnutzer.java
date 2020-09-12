@@ -8,13 +8,11 @@ import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.*;
 import com.vaadin.ui.components.grid.ItemClickListener;
-import com.vaadin.ui.renderers.ButtonRenderer;
 import org.control.SucheControl;
 import org.control.exception.DataBaseException;
 import org.gui.components.Footer;
 import org.gui.components.SchriftzugCarlook;
 import org.gui.components.TopPanel;
-import org.model.dto.AutoDTO;
 import org.model.entity.Auto;
 import org.model.entity.Benutzer;
 import org.services.util.Rolle;
@@ -23,13 +21,14 @@ import org.services.util.ViewUtil;
 import org.services.util.Whitespace;
 import org.ui.MainUI;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainEndnutzer extends VerticalLayout implements View {
     Whitespace whitespace = new Whitespace();
     private String request;
     private SucheControl sucheControl = new SucheControl();
-    private Auto autoSelektiert;
+    private org.model.entity.Auto autoSelektiert;
 
     public void enter (ViewChangeListener.ViewChangeEvent viewChangeEvent) {
         Benutzer benutzer =  ((MainUI) UI.getCurrent()).getBenutzer();
@@ -43,6 +42,8 @@ public class MainEndnutzer extends VerticalLayout implements View {
     }
 
     public void setUp () {
+        setStyleName(StylesheetUtil.angemeldetBg);
+
         Benutzer benutzer = ((MainUI) UI.getCurrent()).getBenutzer();
 
         //Logo und Titel einbinden
@@ -73,7 +74,7 @@ public class MainEndnutzer extends VerticalLayout implements View {
         sucheHori.addComponents(suchfeld, new Label("&nbsp", ContentMode.HTML));
 
         //Grid
-        Grid<Auto> grid = new Grid<>(Auto.class);
+        Grid<org.model.entity.Auto> grid = new Grid<>(org.model.entity.Auto.class);
         grid.setSizeFull();
 
         //Suchebutton
@@ -149,20 +150,14 @@ public class MainEndnutzer extends VerticalLayout implements View {
                     removeComponent(grid);
                     addComponent(grid);
 
-                    List<Auto> daten = null;
-                    List<AutoDTO> datenDTO = null;
+                    ArrayList<Auto> daten = null;
 
                     //Proxy Zugriff
                     try {
-                        datenDTO = sucheControl.getAutoBySuche(request);
+                        daten = sucheControl.getAutoBySuche(request);
                     } catch (DataBaseException e) {
                         e.printStackTrace();
                     }
-
-                    for(AutoDTO dto : datenDTO) {
-                        daten.add(new Auto(dto));
-                    }
-
 
                     grid.removeAllColumns();
 
@@ -171,14 +166,14 @@ public class MainEndnutzer extends VerticalLayout implements View {
                     }else{
                         //Grid befüllen
                         grid.setItems(daten);
-                        grid.addColumn(Auto::getMarke).setCaption("Marke");
-                        grid.addColumn(Auto::getBaujahr).setCaption("Baujahr");
-                        grid.addColumn(Auto::getBeschreibung).setCaption("Beschreibung");
+                        grid.addColumn(org.model.entity.Auto::getMarke).setCaption("Marke");
+                        grid.addColumn(org.model.entity.Auto::getBaujahr).setCaption("Baujahr");
+                        grid.addColumn(org.model.entity.Auto::getBeschreibung).setCaption("Beschreibung");
                     }
 
-                    grid.addItemClickListener(new ItemClickListener<Auto>() {
+                    grid.addItemClickListener(new ItemClickListener<org.model.entity.Auto>() {
                         @Override
-                        public void itemClick(Grid.ItemClick<Auto> itemClick) {
+                        public void itemClick(Grid.ItemClick<org.model.entity.Auto> itemClick) {
                             autoSelektiert = itemClick.getItem();
                         }
                     });
