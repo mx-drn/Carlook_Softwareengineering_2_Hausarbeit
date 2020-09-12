@@ -22,7 +22,6 @@ import org.services.util.Whitespace;
 import org.ui.MainUI;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainEndnutzer extends VerticalLayout implements View {
     Whitespace whitespace = new Whitespace();
