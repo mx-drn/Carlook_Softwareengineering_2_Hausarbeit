@@ -129,10 +129,6 @@ public class ReservierungDao {
         return reservierung;
     }
 
-
-    // TBD
-
-
     public void createReservierung(Reservierung reservierung) throws DataBaseException {
         String sql = "INSERT INTO carlook.reservierung (id_endnutzer, id_auto) VALUES (?,?)";
         PreparedStatement preparedStatement = null;
