@@ -6,6 +6,7 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="Carlook_Softwareengineering_2_Hausarbeit" />
         <module name="carlook" />
       </profile>
     </annotationProcessing>
