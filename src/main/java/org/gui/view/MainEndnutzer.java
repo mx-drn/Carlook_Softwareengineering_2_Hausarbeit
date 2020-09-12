@@ -8,6 +8,8 @@ import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.*;
 import com.vaadin.ui.components.grid.ItemClickListener;
+import org.control.RegistrierungsControl;
+import org.control.ReservierungsControl;
 import org.control.SucheControl;
 import org.control.exception.DataBaseException;
 import org.gui.components.Footer;
@@ -94,8 +96,7 @@ public class MainEndnutzer extends VerticalLayout implements View {
             @Override
             public void buttonClick(Button.ClickEvent clickEvent) {
                 if(autoSelektiert != null) {
-                    //TODO
-                    //Reservierungsfunktion ergänzen
+                    ReservierungsControl.reserviereAuto(autoSelektiert);
                 }else{
                     Notification.show("Sie müssen ein Auto auswählen um es reservieren zu können.", Notification.Type.WARNING_MESSAGE);
                 }
