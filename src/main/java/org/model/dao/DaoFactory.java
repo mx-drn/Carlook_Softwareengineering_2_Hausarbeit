@@ -27,4 +27,8 @@ public class DaoFactory {
         return AutoDao.getInstance();
     }
 
+    public ReservierungDao getReservierungDao() throws DataBaseException {
+        return ReservierungDao.getInstance();
+    }
+
 }
