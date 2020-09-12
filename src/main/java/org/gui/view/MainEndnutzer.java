@@ -74,8 +74,9 @@ public class MainEndnutzer extends VerticalLayout implements View {
         sucheHori.addComponents(suchfeld, new Label("&nbsp", ContentMode.HTML));
 
         //Grid
-        Grid<org.model.entity.Auto> grid = new Grid<>(org.model.entity.Auto.class);
+        Grid<Auto> grid = new Grid<>(Auto.class);
         grid.setSizeFull();
+        grid.setWidth("62%");
 
         //Suchebutton
         Button sucheButton = new Button(FontAwesome.SEARCH);
@@ -149,6 +150,7 @@ public class MainEndnutzer extends VerticalLayout implements View {
 
                     removeComponent(grid);
                     addComponent(grid);
+                    setComponentAlignment(grid, Alignment.MIDDLE_CENTER);
 
                     ArrayList<Auto> daten = null;
 
