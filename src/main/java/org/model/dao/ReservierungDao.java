@@ -205,6 +205,34 @@ public class ReservierungDao {
         }
     }
 
+    public boolean istReserviert(int autoId, int endnutzerId) {
+        boolean rueck = false;
+        String sql = "SELECT * FROM carlook.reservierung AS b WHERE b.id_auto= '" + autoId + "' AND b.id_endnutzer= '" + endnutzerId + "'";
+        PreparedStatement preparedStatement = null;
+        Reservierung reservierung = null;
+
+        try {
+            preparedStatement = this.dbConnection.getPreparedStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                reservierung = new Reservierung();
+                reservierung.setResId(resultSet.getInt("id_reservierung"));
+                reservierung.setEndId(resultSet.getInt("id_endnutzer"));
+                reservierung.setAutoId(resultSet.getInt("id_auto"));
+            }
+
+            if(reservierung != null) {
+                rueck = true;
+            }
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        return rueck;
+    }
+
     //Private Methoden
 
     private void setLatestResId(Reservierung reservierung) throws DataBaseException {

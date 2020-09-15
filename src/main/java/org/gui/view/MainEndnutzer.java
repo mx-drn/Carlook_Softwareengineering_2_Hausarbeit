@@ -112,20 +112,44 @@ public class MainEndnutzer extends VerticalLayout implements View {
         grid.setSizeFull();
         grid.setWidth("62%");
 
-        ArrayList<Auto> reservierungen = new ArrayList<>();
-        reservierungen = ReservierungsControl.getAllReservierungen();
-        grid.setCaption("Deine Reservierungen:");
-        grid.setItems(reservierungen);
-        grid.addColumn(org.model.entity.Auto::getMarke).setCaption("Marke");
-        grid.addColumn(org.model.entity.Auto::getBaujahr).setCaption("Baujahr");
-        grid.addColumn(org.model.entity.Auto::getBeschreibung).setCaption("Beschreibung");
-
+        //Falls noch keine Autos reserviert wurden
+        Label nochNichtsReserviert = new Label("Sie haben noch keine Autos reserviert.");
 
         tabLinks.addComponent(sucheHori);
         tabSheet.addTab(tabLinks, "Autosuche");
         tabSheet.addTab(tabRechts, "Meine Reservierungen");
         setComponentAlignment(tabSheet, Alignment.MIDDLE_CENTER);
         tabSheet.setWidth("60%");
+
+        tabSheet.addSelectedTabChangeListener(new TabSheet.SelectedTabChangeListener() {
+            @Override
+            public void selectedTabChange(TabSheet.SelectedTabChangeEvent selectedTabChangeEvent) {
+                if (tabSheet.getSelectedTab() == tabRechts) {
+                    //Reservierungen für das Reservierungsgrid
+                    ArrayList<Auto> reservierungen = null;
+                    reservierungen = ReservierungsControl.getAllReservierungen();
+
+                    tabRechts.addComponent(gridReservierung);
+
+                    if (!reservierungen.isEmpty()) {
+                        tabRechts.removeComponent(nochNichtsReserviert);
+
+                        gridReservierung.removeAllColumns();
+                        gridReservierung.setCaption("Deine Reservierungen:");
+
+                        gridReservierung.setItems(reservierungen);
+                        gridReservierung.addColumn(Auto::getMarke).setCaption("Marke");
+                        gridReservierung.addColumn(Auto::getBaujahr).setCaption("Baujahr");
+                        gridReservierung.addColumn(Auto::getBeschreibung).setCaption("Beschreibung");
+
+
+                    }else{
+                        tabRechts.removeComponent(nochNichtsReserviert);
+                        tabRechts.addComponent(nochNichtsReserviert);
+                    }
+                }
+            }
+        });
 
         addComponent(whitespace.getWhitespace());
         addComponent(whitespace.getWhitespace());

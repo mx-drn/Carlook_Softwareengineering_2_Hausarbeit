@@ -28,7 +28,7 @@ public class ReservierungsControl {
             int autoId = autoDao.getAuto(auto.getMarke(), auto.getBaujahr(), auto.getBeschreibung()).getId();
 
             //Fehlerbehandlung:Benutzer hat fahrzeug bereits reserviert
-            if (bereitsReserviert(autoId, benutzer.getId())) {
+            if (reservierungDao.istReserviert(autoId, benutzer.getId())) {
                 throw new ReservierungAlreadyExistsException();
             }
 
@@ -72,20 +72,5 @@ public class ReservierungsControl {
         return reservierteAutos;
     }
 
-    public static boolean bereitsReserviert (int autoId, int benutzerId) {
-        boolean existiert = false;
-
-        try {
-            ReservierungDao reservierungDao = DaoFactory.getInstance().getReservierungDao();
-
-            reservierungDao.getReservierung(autoId, benutzerId);
-
-            existiert = true;
-        } catch (DataBaseException throwables) {
-            throwables.printStackTrace();
-        } catch (NoSuchReservierungException e) {}
-
-        return existiert;
-    }
 
 }
