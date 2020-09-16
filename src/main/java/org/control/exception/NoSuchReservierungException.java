@@ -1,4 +1,6 @@
 package org.control.exception;
 
-public class NoSuchReservierungException extends Exception {
+import java.sql.SQLException;
+
+public class NoSuchReservierungException extends SQLException {
 }

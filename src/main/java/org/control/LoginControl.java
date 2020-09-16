@@ -43,11 +43,13 @@ public class LoginControl {
             if(benutzer.getRolle().equals(Rolle.ENDNUTZER)) {
                 ((MainUI) UI.getCurrent()).setBenutzer(benutzer);
                 UI.getCurrent().getNavigator().navigateTo(ViewUtil.VIEWENDNNUTZER);
+                benutzerDao.closeConnection();
             }
             //Benutzer ist Vertriebler
             else if(benutzer.getRolle().equals(Rolle.VERTRIEBLER)) {
                 ((MainUI) UI.getCurrent()).setBenutzer(benutzer);
                 UI.getCurrent().getNavigator().navigateTo(ViewUtil.VIEWVERTRIEBLER);
+                benutzerDao.closeConnection();
             }
         }
         else {

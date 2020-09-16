@@ -193,6 +193,7 @@ public class BenutzerDao {
         finally {
             try {
                 if(preparedStatement != null) preparedStatement.close();
+                this.dbConnection = new DBConnection();
                 this.dbConnection.closeConnection();
             }
             catch(SQLException e) {

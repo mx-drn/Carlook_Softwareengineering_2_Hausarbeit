@@ -59,6 +59,10 @@ public class Startseite extends VerticalLayout implements View {
                     Notification.show("Login nicht möglich. Bitte überprüfen Sie Ihre Eingaben!", Notification.Type.ERROR_MESSAGE);
                     email.setValue("");
                     passwort.setValue("");
+                }catch (NullPointerException ex) {
+                    Notification.show("Es scheint, als sei die Verbidnung abgebrochen, bitte versuchen Sie es erneut.", Notification.Type.WARNING_MESSAGE);
+                    email.setValue("");
+                    passwort.setValue("");
                 }
 
             }

@@ -8,7 +8,6 @@ import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.*;
 import com.vaadin.ui.components.grid.ItemClickListener;
-import org.control.RegistrierungsControl;
 import org.control.ReservierungsControl;
 import org.control.SucheControl;
 import org.control.exception.DataBaseException;
@@ -29,7 +28,8 @@ public class MainEndnutzer extends VerticalLayout implements View {
     Whitespace whitespace = new Whitespace();
     private String request;
     private SucheControl sucheControl = new SucheControl();
-    private org.model.entity.Auto autoSelektiert;
+    private Auto autoSelektiert;
+    private Auto reservierungSelektiert;
 
     public void enter (ViewChangeListener.ViewChangeEvent viewChangeEvent) {
         Benutzer benutzer =  ((MainUI) UI.getCurrent()).getBenutzer();
@@ -91,6 +91,7 @@ public class MainEndnutzer extends VerticalLayout implements View {
 
         //Reservierungsbutton
         Button reservieren = new Button("Reservieren");
+        reservieren.addStyleName(StylesheetUtil.reservierenButton);
 
         Button.ClickListener reservierungsListener = new Button.ClickListener() {
             @Override
@@ -106,13 +107,74 @@ public class MainEndnutzer extends VerticalLayout implements View {
         addComponent(sucheHori);
         setComponentAlignment(sucheHori, Alignment.MIDDLE_CENTER);
 
-        //TBD wenn ReservierungsDAO fertig ist: anzeigen der Reservierungen und Löschen
+        //Anzeigen der Reservierungen und Löschen
+        Grid<Auto> gridReservierung = new Grid<>(Auto.class);
+        gridReservierung.setSizeFull();
+        gridReservierung.setWidth("62%");
+
+        //Falls noch keine Autos reserviert wurden
+        Label nochNichtsReserviert = new Label("Sie haben noch keine Autos reserviert.");
+
+        //Reservierung aufheben Button
+        Button reservierungAufheben = new Button("Reservierung aufheben");
+        reservierungAufheben.setStyleName(StylesheetUtil.reservierungAufheben);
+
+        reservierungAufheben.addClickListener(new Button.ClickListener() {
+            @Override
+            public void buttonClick(Button.ClickEvent clickEvent) {
+                ReservierungsControl.reservierungAufheben(reservierungSelektiert.getId());
+            }
+        });
+
 
         tabLinks.addComponent(sucheHori);
         tabSheet.addTab(tabLinks, "Autosuche");
         tabSheet.addTab(tabRechts, "Meine Reservierungen");
         setComponentAlignment(tabSheet, Alignment.MIDDLE_CENTER);
         tabSheet.setWidth("60%");
+
+        tabSheet.addSelectedTabChangeListener(new TabSheet.SelectedTabChangeListener() {
+            @Override
+            public void selectedTabChange(TabSheet.SelectedTabChangeEvent selectedTabChangeEvent) {
+                if (tabSheet.getSelectedTab() == tabRechts) {
+                    //Reservierungen für das Reservierungsgrid
+                    ArrayList<Auto> reservierungen = null;
+                    reservierungen = ReservierungsControl.getAlleReservierteAutos();
+
+                    if (!reservierungen.isEmpty()) {
+                        tabRechts.addComponent(gridReservierung);
+                        tabRechts.setComponentAlignment(gridReservierung, Alignment.MIDDLE_CENTER);
+
+                        tabRechts.removeComponent(nochNichtsReserviert);
+
+                        //Reservierung löschen Button
+                        tabRechts.addComponent(reservierungAufheben);
+                        tabRechts.setComponentAlignment(reservierungAufheben, Alignment.MIDDLE_CENTER);
+
+                        gridReservierung.removeAllColumns();
+                        gridReservierung.setCaption("Deine Reservierungen:");
+
+                        gridReservierung.setItems(reservierungen);
+                        gridReservierung.addColumn(Auto::getMarke).setCaption("Marke");
+                        gridReservierung.addColumn(Auto::getBaujahr).setCaption("Baujahr");
+                        gridReservierung.addColumn(Auto::getBeschreibung).setCaption("Beschreibung");
+
+                        gridReservierung.addItemClickListener(new ItemClickListener<Auto>() {
+                            @Override
+                            public void itemClick(Grid.ItemClick<Auto> itemClick) {
+                                reservierungSelektiert = itemClick.getItem();
+                            }
+                        });
+
+
+                    }else{
+                        tabRechts.removeComponent(nochNichtsReserviert);
+                        tabRechts.addComponent(nochNichtsReserviert);
+                        tabRechts.setComponentAlignment(nochNichtsReserviert, Alignment.MIDDLE_CENTER);
+                    }
+                }
+            }
+        });
 
         addComponent(whitespace.getWhitespace());
         addComponent(whitespace.getWhitespace());
@@ -201,8 +263,10 @@ public class MainEndnutzer extends VerticalLayout implements View {
             @Override
             public void selectedTabChange(TabSheet.SelectedTabChangeEvent selectedTabChangeEvent) {
                 removeComponent(grid);
+                removeComponent(reservieren);
                 addComponent(footer);
             }
         });
     }
+
 }
