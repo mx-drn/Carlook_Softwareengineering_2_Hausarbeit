@@ -40,6 +40,7 @@ public class ReservierungDao {
 
         try {
             preparedStatement = this.dbConnection.getPreparedStatement(sql);
+            preparedStatement.executeUpdate();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }finally {

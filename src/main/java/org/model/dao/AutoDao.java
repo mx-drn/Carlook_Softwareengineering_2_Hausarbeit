@@ -117,7 +117,7 @@ public class AutoDao {
         PreparedStatement preparedStatement = null;
 
         try {
-            preparedStatement = dbConnection.getPreparedStatement(sql);
+            preparedStatement = this.dbConnection.getPreparedStatement(sql);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }finally {

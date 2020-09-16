@@ -149,6 +149,7 @@ public class MainEndnutzer extends VerticalLayout implements View {
 
                         //Reservierung löschen Button
                         tabRechts.addComponent(reservierungAufheben);
+                        tabRechts.setComponentAlignment(reservierungAufheben, Alignment.MIDDLE_CENTER);
 
                         gridReservierung.removeAllColumns();
                         gridReservierung.setCaption("Deine Reservierungen:");
