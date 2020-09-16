@@ -148,6 +148,10 @@ public class MainVertriebler extends VerticalLayout implements View {
                                 autoSelektiert = itemClick.getItem();
                             }
                         });
+                    }else{
+                        tabRechts.removeComponent(gridAlleAngebote);
+                        tabRechts.removeComponent(angebotEntfernen);
+                        tabRechts.addComponent(nochNichtsErstellt);
                     }
 
                 }
