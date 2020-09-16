@@ -3,11 +3,16 @@ package org.model.dao;
 import com.vaadin.ui.UI;
 import org.control.exception.DataBaseException;
 import org.control.exception.NoSuchAutoException;
+import org.control.exception.NoSuchReservierungException;
 import org.model.entity.Auto;
+import org.model.entity.Endnutzer;
+import org.model.entity.Reservierung;
+import org.model.entity.Vertriebler;
 import org.services.db.DBConnection;
 import org.services.db.QueryContext;
 import org.ui.MainUI;
 
+import java.awt.image.AreaAveragingScaleFilter;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -84,7 +89,7 @@ public class AutoDao {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
-                auto = new org.model.entity.Auto();
+                auto = new Auto();
                 auto.setId(resultSet.getInt("id_auto"));
                 auto.setMarke(resultSet.getString("marke"));
                 auto.setBaujahr(resultSet.getInt("baujahr"));
@@ -112,12 +117,58 @@ public class AutoDao {
         return auto;
     }
 
+    public ArrayList<Auto> getAlleAngebotenenAutos (Vertriebler vertriebler) throws DataBaseException {
+        String sql = "SELECT * FROM carlook.auto AS a WHERE a.id_vertriebler= '" + vertriebler.getId() + "'";
+        PreparedStatement preparedStatement = null;
+        Auto auto = null;
+        ArrayList<Auto> result = new ArrayList<>();
+        boolean failed = false;
+
+        try {
+            preparedStatement = this.dbConnection.getPreparedStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (preparedStatement != null){
+
+                while (resultSet.next()) {
+                    auto = new Auto();
+                    auto.setId(resultSet.getInt("id_auto"));
+                    auto.setMarke(resultSet.getString("marke"));
+                    auto.setBaujahr(resultSet.getInt("baujahr"));
+                    auto.setBeschreibung(resultSet.getString("beschreibung"));
+                    auto.setId_vertriebler(resultSet.getInt("id_vertriebler"));
+
+                    result.add(auto);
+                }
+
+            }else {
+                throw new NoSuchReservierungException();
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            failed = true;
+        } finally {
+            try {
+                if (preparedStatement != null) preparedStatement.close();
+                this.dbConnection.closeConnection();
+            } catch (SQLException e) {
+                e.printStackTrace();
+                failed = true;
+            }
+            if (failed) throw new DataBaseException("Beim Laden der Reservierungen ist ein Fehler aufgetreten!");
+        }
+
+        return result;
+    }
+
     public void delete (int id) {
         String sql = "DELETE FROM carlook.auto AS b WHERE b.id_auto='" + id + "'";
         PreparedStatement preparedStatement = null;
 
         try {
             preparedStatement = this.dbConnection.getPreparedStatement(sql);
+            preparedStatement.executeUpdate();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }finally {
