@@ -46,7 +46,7 @@ public class ReservierungsControl {
         }
     }
 
-    public static ArrayList<Auto> getAllReservierungen () {
+    public static ArrayList<Auto> getAlleReservierteAutos() {
         ArrayList<Reservierung> reservierungen = new ArrayList<>();
         ArrayList<Auto> reservierteAutos = new ArrayList<>();
 
@@ -58,19 +58,32 @@ public class ReservierungsControl {
 
             reservierungen = reservierungDao.getReservierungen((Endnutzer) benutzer);
 
-            //Umwandeln der AutoId in Reservierungen in das tatsächliche AUto Objekt
-
+            //Umwandeln der AutoId in Reservierungen in das tatsächliche Auto Objekt
             for (Reservierung res : reservierungen) {
                 Auto auto = autoDao.getAuto(res.getAutoId());
                 reservierteAutos.add(auto);
             }
 
-        } catch (DataBaseException | NoSuchReservierungException | NoSuchAutoException throwables) {
+        } catch (DataBaseException | NoSuchAutoException throwables) {
             throwables.printStackTrace();
         }
 
         return reservierteAutos;
     }
 
+    public static void reservierungAufheben (int autoId) {
+
+        try {
+            ReservierungDao reservierungDao = DaoFactory.getInstance().getReservierungDao();
+
+            Benutzer benutzer =  ((MainUI) UI.getCurrent()).getBenutzer();
+            reservierungDao.delete(reservierungDao.getReservierung(autoId, benutzer.getId()).getResId());
+
+            Notification.show("Reservierung wurde aufgehoben", Notification.Type.HUMANIZED_MESSAGE);
+        } catch (DataBaseException | NoSuchReservierungException throwables) {
+            throwables.printStackTrace();
+        }
+
+    }
 
 }

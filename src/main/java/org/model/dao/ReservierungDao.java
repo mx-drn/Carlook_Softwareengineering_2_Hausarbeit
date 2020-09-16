@@ -39,7 +39,7 @@ public class ReservierungDao {
         PreparedStatement preparedStatement = null;
 
         try {
-            preparedStatement = dbConnection.getPreparedStatement(sql);
+            preparedStatement = this.dbConnection.getPreparedStatement(sql);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }finally {
@@ -91,7 +91,7 @@ public class ReservierungDao {
         return reservierung;
     }
 
-    public ArrayList<Reservierung> getReservierungen(Endnutzer endnutzer) throws NoSuchReservierungException, DataBaseException {
+    public ArrayList<Reservierung> getReservierungen(Endnutzer endnutzer) throws DataBaseException {
         String sql = "SELECT * FROM carlook.reservierung AS b WHERE b.id_endnutzer= '" + endnutzer.getId() + "'";
         PreparedStatement preparedStatement = null;
         Reservierung reservierung = null;
@@ -102,14 +102,18 @@ public class ReservierungDao {
             preparedStatement = this.dbConnection.getPreparedStatement(sql);
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            if (resultSet.next()) {
-                reservierung = new Reservierung();
-                reservierung.setResId(resultSet.getInt("id_reservierung"));
-                reservierung.setEndId(resultSet.getInt("id_endnutzer"));
-                reservierung.setAutoId(resultSet.getInt("id_auto"));
+            if (preparedStatement != null){
 
-                result.add(reservierung);
-            } else {
+                while (resultSet.next()) {
+                    reservierung = new Reservierung();
+                    reservierung.setResId(resultSet.getInt("id_reservierung"));
+                    reservierung.setEndId(resultSet.getInt("id_endnutzer"));
+                    reservierung.setAutoId(resultSet.getInt("id_auto"));
+
+                    result.add(reservierung);
+                }
+
+            }else {
                 throw new NoSuchReservierungException();
             }
 
