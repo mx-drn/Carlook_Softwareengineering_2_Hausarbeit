@@ -3,6 +3,7 @@ package org.gui.view;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.ui.*;
+import com.vaadin.ui.components.grid.ItemClickListener;
 import org.control.AngebotErstellenControl;
 import org.gui.components.Footer;
 import org.gui.components.SchriftzugCarlook;
@@ -14,8 +15,11 @@ import org.services.util.ViewUtil;
 import org.services.util.Whitespace;
 import org.ui.MainUI;
 
+import java.util.ArrayList;
+
 public class MainVertriebler extends VerticalLayout implements View {
-    Whitespace whitespace = new Whitespace();
+    private Whitespace whitespace = new Whitespace();
+    private Auto autoSelektiert;
 
     public void enter (ViewChangeListener.ViewChangeEvent viewChangeEvent) {
         Benutzer benutzer =  ((MainUI) UI.getCurrent()).getBenutzer();
@@ -93,6 +97,63 @@ public class MainVertriebler extends VerticalLayout implements View {
         tabLinks.addComponent(autoAnbieten);
 
         tabSheet.addTab(tabLinks, "Auto anbieten");
+
+        //Angebot entfernen Button
+        Button angebotEntfernen = new Button("Ausgewähltes Angebot entfernen.");
+        angebotEntfernen.setStyleName(StylesheetUtil.reservierungAufheben);
+
+        angebotEntfernen.addClickListener(new Button.ClickListener() {
+            @Override
+            public void buttonClick(Button.ClickEvent clickEvent) {
+                AngebotErstellenControl.angebotLöschen(autoSelektiert);
+            }
+        });
+
+        //Falls noch keine Autos erstellt wurden
+        Label nochNichtsErstellt = new Label("Sie haben noch keine Autos eingestellt.");
+
+        //Grid für Anzeige aller Angebote
+        Grid<Auto> gridAlleAngebote = new Grid<>(Auto.class);
+        gridAlleAngebote.setSizeFull();
+        gridAlleAngebote.setWidth("62%");
+
+        tabSheet.addSelectedTabChangeListener(new TabSheet.SelectedTabChangeListener() {
+            @Override
+            public void selectedTabChange(TabSheet.SelectedTabChangeEvent selectedTabChangeEvent) {
+                if (tabSheet.getSelectedTab() == tabRechts) {
+                    //Autos für das Alle-Angebote-Anzeigen-Grid
+                    ArrayList<Auto> angebote = AngebotErstellenControl.getAlleAngebote();
+
+                    if (!angebote.isEmpty()) {
+                        tabRechts.addComponent(gridAlleAngebote);
+                        tabRechts.setComponentAlignment(gridAlleAngebote, Alignment.MIDDLE_CENTER);
+
+                        tabRechts.removeComponent(nochNichtsErstellt);
+
+                        //Auto löschen Button
+                        tabRechts.addComponent(angebotEntfernen);
+                        tabRechts.setComponentAlignment(angebotEntfernen, Alignment.MIDDLE_CENTER);
+
+                        gridAlleAngebote.removeAllColumns();
+                        gridAlleAngebote.setCaption("Deine Reservierungen:");
+
+                        gridAlleAngebote.setItems(angebote);
+                        gridAlleAngebote.addColumn(Auto::getMarke).setCaption("Marke");
+                        gridAlleAngebote.addColumn(Auto::getBaujahr).setCaption("Baujahr");
+                        gridAlleAngebote.addColumn(Auto::getBeschreibung).setCaption("Beschreibung");
+
+                        gridAlleAngebote.addItemClickListener(new ItemClickListener<Auto>() {
+                            @Override
+                            public void itemClick(Grid.ItemClick<Auto> itemClick) {
+                                autoSelektiert = itemClick.getItem();
+                            }
+                        });
+                    }
+
+                }
+            }
+        });
+
         tabSheet.addTab(tabRechts, "Meine Angebote");
         setComponentAlignment(tabSheet, Alignment.MIDDLE_CENTER);
         tabSheet.setWidth("60%");

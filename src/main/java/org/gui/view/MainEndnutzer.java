@@ -109,8 +109,8 @@ public class MainEndnutzer extends VerticalLayout implements View {
 
         //Anzeigen der Reservierungen und Löschen
         Grid<Auto> gridReservierung = new Grid<>(Auto.class);
-        grid.setSizeFull();
-        grid.setWidth("62%");
+        gridReservierung.setSizeFull();
+        gridReservierung.setWidth("62%");
 
         //Falls noch keine Autos reserviert wurden
         Label nochNichtsReserviert = new Label("Sie haben noch keine Autos reserviert.");
