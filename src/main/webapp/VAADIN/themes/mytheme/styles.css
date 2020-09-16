@@ -1635,6 +1635,10 @@ div.v-layout.v-horizontal.v-widget {
 	font-weight: normal;
 }
 
+.angemeldet_user {
+	background-color: #969696;
+}
+
 .bg {
 	background-image: url("./img/Background_Startseite.jpg") !important;
 	background-size: cover;

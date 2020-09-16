@@ -16,5 +16,4 @@ public class StylesheetUtil {
     public static final String angemeldetBg = "angemeldet_user";
     public static final String reservierungAufheben = "reservierung_aufheben";
     public static final String reservierenButton = "reservierenButton";
-
 }

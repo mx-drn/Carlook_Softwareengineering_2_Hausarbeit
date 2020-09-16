@@ -9,14 +9,13 @@ import org.model.entity.Auto;
 import org.model.entity.Benutzer;
 import org.model.entity.Vertriebler;
 import org.ui.MainUI;
-
 import java.util.ArrayList;
-
 import static org.model.dao.DaoFactory.getInstance;
 
 public class AngebotErstellenControl {
 
     public static void angebotErstellen(Auto auto) {
+
         try {
             AutoDao autoDao = DaoFactory.getInstance().getAutoDao();
             autoDao.createAuto(auto);
