@@ -2,12 +2,14 @@ package org.model.dao;
 
 import org.control.exception.DataBaseException;
 import org.control.exception.NoSuchUserOrPasswordException;
+import org.control.exception.UsernameAlreadyExistsException;
 import org.model.entity.Benutzer;
 import org.model.entity.Endnutzer;
 import org.model.entity.Vertriebler;
 import org.services.db.DBConnection;
 import org.services.util.Rolle;
 
+import javax.management.Notification;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -157,52 +159,90 @@ public class BenutzerDao {
         return benutzer;
     }
 
-    public void createBenutzer(Benutzer benutzer) throws DataBaseException {
-        String sql = "INSERT INTO carlook.benutzer (rolle, email, passwort) VALUES (?,?,?)";
+    public boolean isRegistered(String email) throws DataBaseException {
+        String sql = "SELECT * FROM carlook.benutzer AS b WHERE b.email= '" + email + "'";
         PreparedStatement preparedStatement = null;
+        Benutzer benutzer = null;
         boolean failed = false;
+        boolean rueck = false;
+
         try {
             preparedStatement = this.dbConnection.getPreparedStatement(sql);
+            ResultSet resultSet = preparedStatement.executeQuery();
 
-            // Benutzer speichern
-            preparedStatement.setString(1, benutzer.getRolle());
-            preparedStatement.setString(2, benutzer.getEmail());
-            preparedStatement.setString(3, benutzer.getPasswort());
-            preparedStatement.executeUpdate();
-
-            // Vergebene Benutzerid ermitteln
-            this.setLatestUserId(benutzer);
-
-            // Endnutzer o. Vertriebler speichern
-
-            if(benutzer.getRolle().equals(Rolle.ENDNUTZER)) {
-                this.createEndnutzer((Endnutzer) benutzer);
-            }else if (benutzer.getRolle().equals(Rolle.VERTRIEBLER)) {
-                this.createVertriebler((Vertriebler) benutzer);
+            if (resultSet.next()) {
+                rueck = true;
             }
 
-            //this.dbConnection.commit();
-        }
-        // Fehlerhandling
-        catch (SQLException e) {
+        }catch (SQLException e) {
             e.printStackTrace();
             failed = true;
-        }
-
-        // Ressourcen schließen
-        finally {
-            try {
+        }finally {
+            try{
                 if(preparedStatement != null) preparedStatement.close();
-                this.dbConnection = new DBConnection();
                 this.dbConnection.closeConnection();
             }
             catch(SQLException e) {
                 e.printStackTrace();
                 failed = true;
             }
-            // Wenn ein Fehler aufgetreten ist
-            if (failed) throw new DataBaseException("Beim Speichern des Benutzers ist ein Fehler aufgetreten!");
+            if(failed) throw new DataBaseException("Beim Laden der Benutzer ist ein Fehler aufgetreten!");
         }
+
+        return rueck;
+    }
+
+    public void createBenutzer(Benutzer benutzer) throws DataBaseException, UsernameAlreadyExistsException {
+        String sql = "INSERT INTO carlook.benutzer (rolle, email, passwort) VALUES (?,?,?)";
+        PreparedStatement preparedStatement = null;
+        boolean failed = false;
+
+        if (!isRegistered(benutzer.getEmail())) {
+
+            try {
+                preparedStatement = this.dbConnection.getPreparedStatement(sql);
+
+                // Benutzer speichern
+                preparedStatement.setString(1, benutzer.getRolle());
+                preparedStatement.setString(2, benutzer.getEmail());
+                preparedStatement.setString(3, benutzer.getPasswort());
+                preparedStatement.executeUpdate();
+
+                // Vergebene Benutzerid ermitteln
+                this.setLatestUserId(benutzer);
+
+                // Endnutzer o. Vertriebler speichern
+
+                if (benutzer.getRolle().equals(Rolle.ENDNUTZER)) {
+                    this.createEndnutzer((Endnutzer) benutzer);
+                } else if (benutzer.getRolle().equals(Rolle.VERTRIEBLER)) {
+                    this.createVertriebler((Vertriebler) benutzer);
+                }
+
+
+            }// Fehlerhandling
+            catch (SQLException e) {
+                e.printStackTrace();
+                failed = true;
+            }
+            // Ressourcen schließen
+            finally {
+                try {
+                    if(preparedStatement != null) preparedStatement.close();
+                    this.dbConnection = new DBConnection();
+                    this.dbConnection.closeConnection();
+                }
+                catch(SQLException e) {
+                    e.printStackTrace();
+                    failed = true;
+                }
+                // Wenn ein Fehler aufgetreten ist
+                if (failed) throw new DataBaseException("Beim Speichern des Benutzers ist ein Fehler aufgetreten!");
+            }
+        }else{
+            throw new UsernameAlreadyExistsException();
+        }
+
     }
 
     //Private Methoden

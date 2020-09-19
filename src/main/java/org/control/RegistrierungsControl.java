@@ -2,6 +2,7 @@ package org.control;
 
 import com.vaadin.ui.Notification;
 import org.control.exception.DataBaseException;
+import org.control.exception.UsernameAlreadyExistsException;
 import org.model.dao.BenutzerDao;
 import org.model.dao.DaoFactory;
 import org.model.entity.Endnutzer;
@@ -36,6 +37,8 @@ public class RegistrierungsControl {
 
         } catch (DataBaseException e) {
             Notification.show(e.getReason(), Notification.Type.ERROR_MESSAGE);
+        }catch (UsernameAlreadyExistsException e) {
+            Notification.show("Es gibt bereits einen Benutzer mit dieser E-Mail Adresse. Es wurde eine Mail an Sie versendet.", Notification.Type.WARNING_MESSAGE);
         }
     }
 

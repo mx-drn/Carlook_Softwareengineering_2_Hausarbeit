@@ -55,6 +55,7 @@ public class Startseite extends VerticalLayout implements View {
         passwort.setDescription("Ihr Passwort");
 
         Button anmelden = new Button("Anmelden");
+        anmelden.setId("Anmeldebutton");
         anmelden.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent clickEvent) {
