@@ -2,6 +2,7 @@ package org.gui.view;
 
 import com.vaadin.data.HasValue;
 import com.vaadin.event.FieldEvents;
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.server.FontAwesome;
@@ -26,6 +27,7 @@ import java.util.ArrayList;
 
 public class MainEndnutzer extends VerticalLayout implements View {
     Whitespace whitespace = new Whitespace();
+    VerticalLayout whitespaceFooter;
     private String request;
     private SucheControl sucheControl = new SucheControl();
     private Auto autoSelektiert;
@@ -43,7 +45,7 @@ public class MainEndnutzer extends VerticalLayout implements View {
     }
 
     public void setUp () {
-        setStyleName(StylesheetUtil.angemeldetBg);
+        setStyleName(StylesheetUtil.bg);
 
         Benutzer benutzer = ((MainUI) UI.getCurrent()).getBenutzer();
 
@@ -77,7 +79,8 @@ public class MainEndnutzer extends VerticalLayout implements View {
         //Grid
         Grid<Auto> grid = new Grid<>(Auto.class);
         grid.setSizeFull();
-        grid.setWidth("62%");
+        grid.setWidth(800, Unit.PIXELS);
+        grid.setHeight(500, Unit.PIXELS);
 
         //Suchebutton
         Button sucheButton = new Button(FontAwesome.SEARCH);
@@ -118,6 +121,7 @@ public class MainEndnutzer extends VerticalLayout implements View {
         //Reservierung aufheben Button
         Button reservierungAufheben = new Button("Reservierung aufheben");
         reservierungAufheben.setStyleName(StylesheetUtil.reservierungAufheben);
+        reservierungAufheben.setIcon(VaadinIcons.ERASER);
 
         reservierungAufheben.addClickListener(new Button.ClickListener() {
             @Override
@@ -128,15 +132,30 @@ public class MainEndnutzer extends VerticalLayout implements View {
 
 
         tabLinks.addComponent(sucheHori);
+        tabLinks.addComponent(grid);
+
         tabSheet.addTab(tabLinks, "Autosuche");
         tabSheet.addTab(tabRechts, "Meine Reservierungen");
         setComponentAlignment(tabSheet, Alignment.MIDDLE_CENTER);
         tabSheet.setWidth("60%");
 
+        //Set Grid invisible till it is useful
+        grid.setVisible(false);
+
+        //Add Footer
+        whitespaceFooter = whitespace.getFooterWhitespace();
+        addComponent(whitespaceFooter);
+
+        Footer footer = new Footer();
+        addComponent(footer);
+        footer.setSizeFull();
+        setComponentAlignment(footer, Alignment.BOTTOM_CENTER);
+
         tabSheet.addSelectedTabChangeListener(new TabSheet.SelectedTabChangeListener() {
             @Override
             public void selectedTabChange(TabSheet.SelectedTabChangeEvent selectedTabChangeEvent) {
                 if (tabSheet.getSelectedTab() == tabRechts) {
+                    removeComponent(whitespaceFooter);
                     //Reservierungen für das Reservierungsgrid
                     ArrayList<Auto> reservierungen = null;
                     reservierungen = ReservierungsControl.getAlleReservierteAutos();
@@ -172,17 +191,14 @@ public class MainEndnutzer extends VerticalLayout implements View {
                         tabRechts.addComponent(nochNichtsReserviert);
                         tabRechts.setComponentAlignment(nochNichtsReserviert, Alignment.MIDDLE_CENTER);
                     }
+                }else{
+                    suchfeld.setValue("");
+                    removeComponent(footer);
+                    addComponent(whitespaceFooter);
+                    addComponent(footer);
                 }
             }
         });
-
-        addComponent(whitespace.getWhitespace());
-        addComponent(whitespace.getWhitespace());
-
-        Footer footer = new Footer();
-        addComponent(footer);
-        setComponentAlignment(footer, Alignment.MIDDLE_CENTER);
-
 
         suchfeld.addBlurListener(new FieldEvents.BlurListener() {
             @Override
@@ -201,18 +217,26 @@ public class MainEndnutzer extends VerticalLayout implements View {
                 if (suchfeld.getValue().equals("")) {
                     Notification.show("Sie haben keinen Suchbegriff eingegeben!");
                     grid.removeAllColumns();
+
+                    grid.setVisible(false);
+                    tabLinks.removeComponent(reservieren);
+                    removeComponent(footer);
+                    addComponent(whitespaceFooter);
+                    addComponent(footer);
                 }else{
                     request = suchfeld.getValue();
 
                     //Footer entfernen für richtige Theming
                     removeComponent(footer);
-                    addComponent(footer);
+                    removeComponent(whitespaceFooter);
 
                     grid.setCaption("Deine Suchanfrage hat folgende Ergebnisse geliefert:");
 
-                    removeComponent(grid);
-                    addComponent(grid);
-                    setComponentAlignment(grid, Alignment.MIDDLE_CENTER);
+                    tabLinks.removeComponent(grid);
+                    tabLinks.addComponent(grid);
+                    tabLinks.setComponentAlignment(grid, Alignment.MIDDLE_CENTER);
+                    grid.setVisible(true);
+                    grid.setSizeFull();
 
                     ArrayList<Auto> daten = null;
 
@@ -230,9 +254,9 @@ public class MainEndnutzer extends VerticalLayout implements View {
                     }else{
                         //Grid befüllen
                         grid.setItems(daten);
-                        grid.addColumn(org.model.entity.Auto::getMarke).setCaption("Marke");
-                        grid.addColumn(org.model.entity.Auto::getBaujahr).setCaption("Baujahr");
-                        grid.addColumn(org.model.entity.Auto::getBeschreibung).setCaption("Beschreibung");
+                        grid.addColumn(Auto::getMarke).setCaption("Marke");
+                        grid.addColumn(Auto::getBaujahr).setCaption("Baujahr");
+                        grid.addColumn(Auto::getBeschreibung).setCaption("Beschreibung");
                     }
 
                     grid.addItemClickListener(new ItemClickListener<org.model.entity.Auto>() {
@@ -245,9 +269,9 @@ public class MainEndnutzer extends VerticalLayout implements View {
                     if(benutzer.getRolle().equals(Rolle.ENDNUTZER) ) {
                         reservieren.removeClickListener(reservierungsListener);
                         reservieren.addClickListener(reservierungsListener);
-                        removeComponent(reservieren);
-                        addComponents(reservieren);
-                        setComponentAlignment(reservieren, Alignment.MIDDLE_CENTER);
+                        tabLinks.removeComponent(reservieren);
+                        tabLinks.addComponents(reservieren);
+                        tabLinks.setComponentAlignment(reservieren, Alignment.MIDDLE_CENTER);
                     }
 
 
@@ -258,15 +282,6 @@ public class MainEndnutzer extends VerticalLayout implements View {
             }
         });
 
-
-        tabSheet.addSelectedTabChangeListener(new TabSheet.SelectedTabChangeListener() {
-            @Override
-            public void selectedTabChange(TabSheet.SelectedTabChangeEvent selectedTabChangeEvent) {
-                removeComponent(grid);
-                removeComponent(reservieren);
-                addComponent(footer);
-            }
-        });
     }
 
 }

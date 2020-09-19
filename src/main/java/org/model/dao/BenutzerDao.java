@@ -17,7 +17,7 @@ public class BenutzerDao {
     private static BenutzerDao instance;
     private DBConnection dbConnection = null;
 
-    private BenutzerDao() throws DataBaseException {
+    private BenutzerDao() {
         try {
             this.dbConnection = new DBConnection();
         } catch (SQLException throwables) {
@@ -25,7 +25,7 @@ public class BenutzerDao {
         }
     }
 
-    public static BenutzerDao getInstance() throws DataBaseException{
+    public static BenutzerDao getInstance() {
         if(instance == null) {
             instance = new BenutzerDao();
         }
@@ -361,5 +361,15 @@ public class BenutzerDao {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+    }
+
+    public boolean isClosed() {
+        boolean rueck = false;
+        try{
+            rueck = this.dbConnection.connectionIsClosed();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return rueck;
     }
 }

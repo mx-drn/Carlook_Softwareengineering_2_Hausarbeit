@@ -1,5 +1,6 @@
 package org.gui.view;
 
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.ui.*;
@@ -32,7 +33,8 @@ public class MainVertriebler extends VerticalLayout implements View {
     }
 
     public void setUp () {
-        setStyleName(StylesheetUtil.angemeldetBg);
+        setStyleName(StylesheetUtil.bg);
+        setSizeFull();
 
         //Logo und Titel einbinden
         SchriftzugCarlook schriftzugCarlook = new SchriftzugCarlook();
@@ -51,6 +53,8 @@ public class MainVertriebler extends VerticalLayout implements View {
         VerticalLayout tabLinks = new VerticalLayout();
         VerticalLayout tabRechts = new VerticalLayout();
 
+        FormLayout formLayout = new FormLayout();
+
         Label label = new Label("Bieten Sie ein neues Auto zum erwerb an.");
 
         //Automarke
@@ -67,6 +71,7 @@ public class MainVertriebler extends VerticalLayout implements View {
 
         //Button angebot erstelen
         Button autoAnbieten = new Button("Auto anbieten");
+        autoAnbieten.setIcon(VaadinIcons.CAR);
 
         autoAnbieten.addClickListener(new Button.ClickListener() {
             @Override
@@ -91,21 +96,26 @@ public class MainVertriebler extends VerticalLayout implements View {
         });
 
         tabLinks.addComponent(label);
-        tabLinks.addComponent(automarke);
-        tabLinks.addComponent(baujahr);
-        tabLinks.addComponent(beschreibung);
-        tabLinks.addComponent(autoAnbieten);
+        formLayout.addComponent(automarke);
+        formLayout.addComponent(baujahr);
+        formLayout.addComponent(beschreibung);
+        formLayout.addComponent(autoAnbieten);
+
+        tabLinks.addComponent(formLayout);
 
         tabSheet.addTab(tabLinks, "Auto anbieten");
 
         //Angebot entfernen Button
         Button angebotEntfernen = new Button("Ausgewähltes Angebot entfernen.");
         angebotEntfernen.setStyleName(StylesheetUtil.reservierungAufheben);
+        angebotEntfernen.setIcon(VaadinIcons.ERASER);
 
         angebotEntfernen.addClickListener(new Button.ClickListener() {
             @Override
             public void buttonClick(Button.ClickEvent clickEvent) {
-                AngebotErstellenControl.angebotLöschen(autoSelektiert);
+                if (autoSelektiert != null) {
+                    AngebotErstellenControl.angebotLöschen(autoSelektiert);
+                }
             }
         });
 

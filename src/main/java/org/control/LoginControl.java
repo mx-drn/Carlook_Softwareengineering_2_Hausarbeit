@@ -37,6 +37,7 @@ public class LoginControl {
 
         BenutzerDao benutzerDao = DaoFactory.getInstance().getBenutzerDao();
         Benutzer benutzer = benutzerDao.getBenutzer(email, passwort);
+
         // Benutzer gefunden
         if(benutzer != null) {
             // Benutzer ist Student

@@ -85,6 +85,7 @@ public class DBConnection {
                         else if(String.class.isAssignableFrom(type)) statement.setString(parameterIndex, (String)value);
                         else if(double.class.isAssignableFrom(type) || Double.class.isAssignableFrom(type)) statement.setDouble(parameterIndex, (double)value);
                         else if(boolean.class.isAssignableFrom(type) || Boolean.class.isAssignableFrom(type)) statement.setBoolean(parameterIndex, (boolean)value);
+                        else if(int.class.isAssignableFrom(type) ||Integer.class.isAssignableFrom(type)) statement.setInt(parameterIndex, (int)value);
                     }
                 }
 

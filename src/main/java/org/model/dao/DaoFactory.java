@@ -19,15 +19,15 @@ public class DaoFactory {
         return DaoFactory.instance;
     }
 
-    public BenutzerDao getBenutzerDao() throws DataBaseException {
+    public BenutzerDao getBenutzerDao() {
         return BenutzerDao.getInstance();
     }
 
-    public AutoDao getAutoDao() throws DataBaseException {
+    public AutoDao getAutoDao() {
         return AutoDao.getInstance();
     }
 
-    public ReservierungDao getReservierungDao() throws DataBaseException {
+    public ReservierungDao getReservierungDao() {
         return ReservierungDao.getInstance();
     }
 

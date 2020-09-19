@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class ProxySucheAuto implements ProxySucheAutoAPI {
     private AutoDao autoDao = null;
 
-    public ProxySucheAuto() throws DataBaseException {
+    public ProxySucheAuto() {
         this.autoDao = DaoFactory.getInstance().getAutoDao();
     }
 
@@ -20,7 +20,7 @@ public class ProxySucheAuto implements ProxySucheAutoAPI {
     }
 
     @Override
-    public void closeConnection() throws DataBaseException {
+    public void closeConnection() {
         this.autoDao.closeConnection();
     }
 }

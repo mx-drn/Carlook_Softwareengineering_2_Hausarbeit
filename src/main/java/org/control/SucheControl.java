@@ -21,6 +21,10 @@ public class SucheControl {
     }
 
     public void closeConAuto() throws DataBaseException {
+        if(this.proxySucheAuto == null) {
+            this.proxySucheAuto = new ProxySucheAuto();
+        }
+
         this.proxySucheAuto.closeConnection();
     }
 

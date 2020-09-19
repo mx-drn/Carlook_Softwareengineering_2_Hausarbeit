@@ -1,5 +1,6 @@
 package org.gui.view;
 
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.ui.*;
@@ -13,6 +14,7 @@ import org.gui.components.SchriftzugCarlook;
 import org.services.util.CheckCarlookEmail;
 import org.services.util.StylesheetUtil;
 import org.services.util.Whitespace;
+import org.ui.MainUI;
 
 public class Startseite extends VerticalLayout implements View {
     Whitespace whitespace = new Whitespace();
@@ -23,7 +25,7 @@ public class Startseite extends VerticalLayout implements View {
 
     public void setUp () {
         //Erstellen des Hintergrundes
-        setStyleName("bg");
+        setStyleName(StylesheetUtil.bg);
         setSizeFull();
 
         SchriftzugCarlook schriftzugCarlook = new SchriftzugCarlook();
@@ -39,12 +41,17 @@ public class Startseite extends VerticalLayout implements View {
         VerticalLayout tabLinks = new VerticalLayout();
         VerticalLayout tabRechts = new VerticalLayout();
 
+        //FormLayout für besseres Design
+        FormLayout formLayoutLogin = new FormLayout();
+
         //E-Mail Adresse für den Login
         TextField email = new TextField("E-Mail");
+        email.setIcon(VaadinIcons.ENVELOPE);
         email.setDescription("Ihre E-Mail Adresse");
 
         //Passwort
         TextField passwort = new TextField("Passwort");
+        passwort.setIcon(VaadinIcons.EYE_SLASH);
         passwort.setDescription("Ihr Passwort");
 
         Button anmelden = new Button("Anmelden");
@@ -60,7 +67,7 @@ public class Startseite extends VerticalLayout implements View {
                     email.setValue("");
                     passwort.setValue("");
                 }catch (NullPointerException ex) {
-                    Notification.show("Es scheint, als sei die Verbidnung abgebrochen, bitte versuchen Sie es erneut.", Notification.Type.WARNING_MESSAGE);
+                    Notification.show("Es scheint, als sei die Verbindung abgebrochen, bitte versuchen Sie es erneut.", Notification.Type.WARNING_MESSAGE);
                     email.setValue("");
                     passwort.setValue("");
                 }
@@ -68,17 +75,26 @@ public class Startseite extends VerticalLayout implements View {
             }
         });
 
-        tabLinks.addComponent(email);
-        tabLinks.addComponent(passwort);
-        tabLinks.addComponent(anmelden);
+        formLayoutLogin.addComponent(email);
+        formLayoutLogin.addComponent(passwort);
+
+        formLayoutLogin.addComponent(anmelden);
+
+        tabLinks.addComponent(formLayoutLogin);
+        //tabLinks.addComponent(anmelden);
         tabLinks.setMargin(true);
+
+        //FormLayout für das registrieren
+        FormLayout formLayoutReg = new FormLayout();
 
         //E-Mail Adresse für das Registrieren
         TextField emailReg = new TextField("E-Mail");
+        emailReg.setIcon(VaadinIcons.ENVELOPE);
         emailReg.setDescription("Ihre E-Mail Adresse");
 
         //Passwort
         TextField passwortReg = new TextField("Passwort");
+        passwortReg.setIcon(VaadinIcons.EYE_SLASH);
         passwortReg.setDescription("Ihr Passwort");
 
         //Rolle wählen
@@ -129,13 +145,14 @@ public class Startseite extends VerticalLayout implements View {
             }
         });
 
-        //tabRechts.addComponent(horizontalLayoutName);
-        tabRechts.addComponent(emailReg);
-        tabRechts.addComponent(passwortReg);
-        tabRechts.addComponent(checkBoxEndnutzer);
-        tabRechts.addComponent(checkBoxVertriebler);
+        formLayoutReg.addComponent(emailReg);
+        formLayoutReg.addComponent(passwortReg);
+        formLayoutReg.addComponent(checkBoxEndnutzer);
+        formLayoutReg.addComponent(checkBoxVertriebler);
 
-        tabRechts.addComponent(registrieren);
+        formLayoutReg.addComponent(registrieren);
+        tabRechts.addComponent(formLayoutReg);
+
         tabLinks.setStyleName(StylesheetUtil.tabsheet);
         tabRechts.setStyleName(StylesheetUtil.tabsheet);
 

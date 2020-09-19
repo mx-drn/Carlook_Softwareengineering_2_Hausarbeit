@@ -5,14 +5,12 @@ import org.control.exception.DataBaseException;
 import org.control.exception.NoSuchAutoException;
 import org.control.exception.NoSuchReservierungException;
 import org.model.entity.Auto;
-import org.model.entity.Endnutzer;
-import org.model.entity.Reservierung;
 import org.model.entity.Vertriebler;
 import org.services.db.DBConnection;
 import org.services.db.QueryContext;
 import org.ui.MainUI;
 
-import java.awt.image.AreaAveragingScaleFilter;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -31,7 +29,7 @@ public class AutoDao {
         }
     }
 
-    public static AutoDao getInstance() throws DataBaseException {
+    public static AutoDao getInstance() {
         if (instance == null) {
             instance = new AutoDao();
         }
@@ -162,7 +160,7 @@ public class AutoDao {
         return result;
     }
 
-    public void delete (int id) {
+    public void delete (int id) throws DataBaseException {
         String sql = "DELETE FROM carlook.auto AS b WHERE b.id_auto='" + id + "'";
         PreparedStatement preparedStatement = null;
 
@@ -170,7 +168,7 @@ public class AutoDao {
             preparedStatement = this.dbConnection.getPreparedStatement(sql);
             preparedStatement.executeUpdate();
         } catch (SQLException throwables) {
-            throwables.printStackTrace();
+            throw new DataBaseException("Beim löschen des ausgewählten Fahrzeuges ist ein Fehler aufgetreten.");
         }finally {
             try{
                 if(preparedStatement != null) preparedStatement.close();
@@ -182,11 +180,11 @@ public class AutoDao {
 
     }
 
-    public ArrayList<Auto> searchAuto(String[] request) {
+    public ArrayList<Auto> searchAuto(String[] request) throws DataBaseException {
         ArrayList<Auto> result = new ArrayList<>();
         if(request == null || request.length == 0) return result;
         String sql = "SELECT DISTINCT marke, baujahr, beschreibung FROM carlook.auto_suche " +
-                "WHERE to_tsvector('german', COALESCE(marke,'') || ' ' || COALESCE(to_char(baujahr,'')) || ' ' || " +
+                "WHERE to_tsvector('german', COALESCE(marke,'') || ' ' || COALESCE(to_char(baujahr, 'FM9999'),'') || ' ' || " +
                 "COALESCE(beschreibung,'')) @@ to_tsquery('german', ?)";
 
         String[] values = {request[0].equals("") ? "" : request[0] + ":*"};
@@ -219,7 +217,7 @@ public class AutoDao {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new DataBaseException("Bei der Suche nach Fahrzeugen ist ein Fehler aufgetreten.");
         }
 
 

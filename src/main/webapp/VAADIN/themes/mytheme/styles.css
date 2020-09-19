@@ -1640,6 +1640,7 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .reservierenButton {
+	font-family: Calibri, sans-serif;
 	background-color: #2d9f19;
 	border: none;
 	color: black;
@@ -1651,6 +1652,7 @@ div.v-layout.v-horizontal.v-widget {
 }
 
 .reservierung_aufheben {
+	font-family: Calibri, sans-serif;
 	background-color: #b13028;
 	border: none;
 	color: black;
@@ -1661,11 +1663,24 @@ div.v-layout.v-horizontal.v-widget {
 	font-size: 16px;
 }
 
+.v-tabsheet-tabitem {
+	font-family: Calibri, sans-serif;
+	font-size: 16px;
+	color: #000000;
+}
+
+.v-tabsheet-tabs td {
+	font-family: Calibri, sans-serif;
+	font-size: 16px;
+	color: #000000;
+}
+
 .bg {
 	background-image: url("./img/Background_Startseite.jpg") !important;
 	background-size: cover;
 	color: #000000;
 	font-size: 15px;
+	font-family: Calibri, sans-serif;
 }
 
 .schriftzug_carlook {
@@ -1682,17 +1697,20 @@ div.v-layout.v-horizontal.v-widget {
 .topPanel {
 	padding: 20px;
 	border-color: #03a9f4;
+	font-family: Calibri, sans-serif;
 }
 
 .login {
 	padding: 30px;
 	border-color: #9D874D;
 	background-color: #3c3c3c;
+	font-family: Calibri, sans-serif;
 }
 
 .footer {
 	font-color: #000000;
 	font-weight: bold;
+	font-family: Calibri, sans-serif;
 }
 
 .mytheme.v-app, .mytheme.v-app-loading {

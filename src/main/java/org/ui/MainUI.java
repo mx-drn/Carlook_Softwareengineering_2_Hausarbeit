@@ -10,11 +10,10 @@ import com.vaadin.navigator.Navigator;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.UI;
-import org.gui.view.MainEndnutzer;
-import org.gui.view.MainVertriebler;
+import org.gui.view.*;
 import org.services.util.ViewUtil;
-import org.gui.view.Startseite;
 import org.model.entity.Benutzer;
+
 
 /**
  * This UI is the application entry point. A UI may either represent a browser window 
@@ -48,12 +47,16 @@ public class MainUI extends UI {
         navi.addView(ViewUtil.MAIN, Startseite.class);
         navi.addView(ViewUtil.VIEWENDNNUTZER, MainEndnutzer.class);
         navi.addView(ViewUtil.VIEWVERTRIEBLER, MainVertriebler.class);
+        navi.addView(ViewUtil.KONTAKTDUMMY, Kontakt.class);
+        navi.addView(ViewUtil.IMPRESSUMDUMMY, Impressum.class);
+        navi.addView(ViewUtil.DATENSCHUTZDUMMY, Datenschutz.class);
+        navi.addView(ViewUtil.FAQDUMMY, Faq.class);
 
         UI.getCurrent().getNavigator().navigateTo(ViewUtil.MAIN);
     }
 
     @WebServlet(urlPatterns = "/*", name = "MyUIServlet", asyncSupported = true)
-    @VaadinServletConfiguration(ui = MainUI.class, productionMode = true)
+    @VaadinServletConfiguration(ui = MainUI.class, productionMode = false)
     public static class MyUIServlet extends VaadinServlet {
     }
 }

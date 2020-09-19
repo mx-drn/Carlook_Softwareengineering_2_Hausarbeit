@@ -39,10 +39,12 @@ public class ReservierungsControl {
 
             Notification.show("Das ausgewählte Auto wurde Reserviert.", Notification.Type.HUMANIZED_MESSAGE);
 
-        } catch (DataBaseException | NoSuchAutoException e) {
-            e.printStackTrace();
+        } catch (DataBaseException e) {
+            Notification.show(e.getReason(), Notification.Type.ERROR_MESSAGE);
         }catch (ReservierungAlreadyExistsException ex) {
             Notification.show("Dieses Auto wurde bereits Reserviert.", Notification.Type.WARNING_MESSAGE);
+        } catch (NoSuchAutoException e) {
+            Notification.show("Dieses Auto existiert nicht mehr. Vielleicht wurde es in der Zwischenzeit von dem Vertriebler gelöscht.", Notification.Type.ERROR_MESSAGE);
         }
     }
 

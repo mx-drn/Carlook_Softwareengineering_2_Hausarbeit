@@ -6,6 +6,7 @@ import com.vaadin.ui.Layout;
 import org.gui.components.SchriftzugCarlook;
 
 public class StylesheetUtil {
+
     public static final String toppanel = "topPanel";
     public static final String login = "login";
     public static final String grunddesign = "grunddesign";
@@ -16,5 +17,6 @@ public class StylesheetUtil {
     public static final String angemeldetBg = "angemeldet_user";
     public static final String reservierungAufheben = "reservierung_aufheben";
     public static final String reservierenButton = "reservierenButton";
+    public static final String bg = "bg";
 
 }

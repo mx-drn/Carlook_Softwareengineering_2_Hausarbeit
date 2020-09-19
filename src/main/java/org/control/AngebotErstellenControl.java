@@ -30,14 +30,15 @@ public class AngebotErstellenControl {
     }
 
     public static void angebotLöschen(Auto auto) {
+        AutoDao autoDao = DaoFactory.getInstance().getAutoDao();
         try {
-            AutoDao autoDao = DaoFactory.getInstance().getAutoDao();
             autoDao.delete(auto.getId());
-
-            Notification.show("Das von Ihnen angebotene Auto wurde erfolgreich entfernt.", Notification.Type.HUMANIZED_MESSAGE);
-        } catch (DataBaseException throwables) {
-            throwables.printStackTrace();
+        } catch (DataBaseException e) {
+            Notification.show(e.getReason(), Notification.Type.ERROR_MESSAGE);
         }
+
+        Notification.show("Das von Ihnen angebotene Auto wurde erfolgreich entfernt.", Notification.Type.HUMANIZED_MESSAGE);
+
     }
 
     public static ArrayList<Auto> getAlleAngebote () {
@@ -49,8 +50,8 @@ public class AngebotErstellenControl {
             Benutzer benutzer = ((MainUI) UI.getCurrent()).getBenutzer();
 
             alleAutos = autoDao.getAlleAngebotenenAutos((Vertriebler) benutzer);
-        } catch (DataBaseException throwables) {
-            throwables.printStackTrace();
+        } catch (DataBaseException e) {
+            Notification.show(e.getReason(), Notification.Type.ERROR_MESSAGE);
         }
 
         return alleAutos;

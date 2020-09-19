@@ -18,7 +18,7 @@ public class ReservierungDao {
     private static ReservierungDao instance;
     private DBConnection dbConnection = null;
 
-    private ReservierungDao() throws DataBaseException {
+    private ReservierungDao() {
         try {
             this.dbConnection = new DBConnection();
         } catch (SQLException throwables) {
@@ -26,7 +26,7 @@ public class ReservierungDao {
         }
     }
 
-    public static ReservierungDao getInstance() throws DataBaseException {
+    public static ReservierungDao getInstance() {
         if (instance == null) {
             instance = new ReservierungDao();
         }
